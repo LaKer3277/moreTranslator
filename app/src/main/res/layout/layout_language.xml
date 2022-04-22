@@ -148,6 +148,7 @@
             android:text="Recently"
             android:textColor="#A3A3A3"
             android:textSize="14sp"
+            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/et_search" />
 
@@ -158,6 +159,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/d_8020252c_r18"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/tv_recently"
             tools:listitem="@layout/item_language" />
 

@@ -8,10 +8,11 @@ import java.util.*
  * Holds the language code (i.e. "en") and the corresponding localized full language name (i.e.
  * "English")
  */
-class Language(val code: String) : Comparable<Language> {
-
-    private val displayName: String
-        get() = Locale(code).displayName
+data class Language(
+    val code: String,
+    val displayName: String = Locale(code).displayName,
+    var available: Int = -1  //-1: 不可用; 0:下载中; 1:可用
+) : Comparable<Language> {
 
     override fun equals(other: Any?): Boolean {
         if (other === this) {
@@ -23,7 +24,7 @@ class Language(val code: String) : Comparable<Language> {
         }
 
         val otherLang = other as Language?
-        return otherLang!!.code == code
+        return otherLang?.code == code
     }
 
     override fun toString(): String {
@@ -36,5 +37,17 @@ class Language(val code: String) : Comparable<Language> {
 
     override fun hashCode(): Int {
         return code.hashCode()
+    }
+
+    fun isAvailable(): Boolean {
+        return available == 1
+    }
+
+    fun isUnavailable(): Boolean {
+        return available == -1
+    }
+
+    fun isDownloading(): Boolean {
+        return available == 0
     }
 }

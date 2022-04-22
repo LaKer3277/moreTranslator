@@ -8,6 +8,8 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.Group
+import androidx.recyclerview.widget.RecyclerView
 import com.tools.android.translator.R
 import com.tools.android.translator.base.AnimatorListener
 
@@ -16,6 +18,10 @@ import com.tools.android.translator.base.AnimatorListener
  * Describe:
  */
 class LanguagePanel: FrameLayout, View.OnClickListener {
+
+    companion object {
+
+    }
 
     constructor(context: Context) : super(context, null) {
         visibility = View.INVISIBLE
@@ -46,10 +52,15 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     private lateinit var panel: View
     private lateinit var cancelView: View
 
+    private lateinit var tvRecent: TextView
+    private lateinit var rvRecent: RecyclerView
+
     private fun initViews() {
         tvSave = findViewById(R.id.tv_save)
         panel = findViewById(R.id.panel)
         cancelView = findViewById(R.id.cancel_top)
+        tvRecent = findViewById(R.id.tv_recently)
+        rvRecent = findViewById(R.id.rv_recent)
     }
 
     override fun onClick(v: View?) {

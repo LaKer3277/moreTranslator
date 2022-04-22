@@ -41,6 +41,25 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         )
+
+        // Update sync toggle button states based on downloaded models list.
+        mTranslateModel.availableModels.observe(
+            this,
+            { translateRemoteModels ->
+                val output = getString(
+                    R.string.downloaded_models_label,
+                    translateRemoteModels
+                )
+                /*downloadedModelsTextView.text = output
+                sourceSyncButton.isChecked =
+                    translateRemoteModels!!.contains(
+                        adapter.getItem(sourceLangSelector.selectedItemPosition)!!.code
+                    )
+                targetSyncButton.isChecked = translateRemoteModels.contains(
+                    adapter.getItem(targetLangSelector.selectedItemPosition)!!.code
+                )*/
+            }
+        )
     }
 
     override fun onClick(v: View?) {
