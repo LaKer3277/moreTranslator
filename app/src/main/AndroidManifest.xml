@@ -31,13 +31,13 @@
             tools:ignore="LockedOrientationActivity" />
 
         <activity
-            android:name=".ui.ActivityCamera"
+            android:name=".ui.CameraActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
         <activity
-            android:name=".ui.ActivitySettings"
+            android:name=".ui.SettingsActivity"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
