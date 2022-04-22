@@ -47,7 +47,7 @@
         android:layout_marginHorizontal="66dp"
         android:layout_marginBottom="98dp"
         android:max="100"
-        android:progress="90"
+        android:progress="1"
         android:progressDrawable="@drawable/layer_loading"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

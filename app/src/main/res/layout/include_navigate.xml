@@ -19,6 +19,7 @@
             android:src="@drawable/select_text" />
 
         <TextView
+            android:id="@+id/tv_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_text"
@@ -43,6 +44,7 @@
             android:src="@drawable/select_camera" />
 
         <TextView
+            android:id="@+id/tv_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_camera"
@@ -67,6 +69,7 @@
             android:src="@drawable/select_setting" />
 
         <TextView
+            android:id="@+id/tv_setting"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/iv_setting"

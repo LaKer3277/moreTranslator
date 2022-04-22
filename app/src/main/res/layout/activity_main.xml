@@ -22,6 +22,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <include
+        android:id="@+id/include_nav"
         layout="@layout/include_navigate"
         android:layout_width="match_parent"
         android:layout_height="65dp"
@@ -64,6 +65,7 @@
         android:layout_height="53dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/d_293038_r18"
+        android:onClick="onClick"
         app:layout_constraintStart_toStartOf="@id/tv_language"
         app:layout_constraintTop_toBottomOf="@id/tv_language" />
 
@@ -74,6 +76,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="12dp"
         android:background="@drawable/d_293038_r18"
+        android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="@id/language"
         app:layout_constraintTop_toBottomOf="@id/tv_language" />
 
@@ -222,7 +225,7 @@
         android:layout_marginHorizontal="35dp"
         android:layout_marginTop="70dp"
         android:layout_marginBottom="-30dp"
-        android:background="null"
+        android:background="@null"
         android:gravity="start"
         android:hint="Please enter text..."
         android:textColorHint="#A5ABB3"
@@ -272,9 +275,9 @@
         app:layout_constraintEnd_toEndOf="@id/clear"
         app:layout_constraintTop_toBottomOf="@id/language" />
 
-    <com.tools.android.translator.ui.view.LanguagePanel
+    <include
         android:id="@+id/language_panel"
+        layout="@layout/layout_language"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

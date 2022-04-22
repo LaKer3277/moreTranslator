@@ -19,23 +19,21 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     constructor(context: Context) : super(context, null) {
         visibility = View.INVISIBLE
-        initViews()
     }
 
     constructor(context: Context, attrs: AttributeSet?) : super(context, attrs) {
         visibility = View.INVISIBLE
-        initViews()
     }
 
     constructor(context: Context, attrs: AttributeSet?, defStyleAttr: Int): super(context, attrs, defStyleAttr) {
         visibility = View.INVISIBLE
-        initViews()
     }
 
     override fun onFinishInflate() {
         super.onFinishInflate()
+        initViews()
         tvSave.setOnClickListener(this)
-        parent.setOnClickListener(this)
+        cancelView.setOnClickListener(this)
         panel.post {
             hasInflated = true
             visibility = View.GONE
@@ -46,17 +44,17 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     private var hasInflated = false
     private lateinit var tvSave: TextView
     private lateinit var panel: View
-    private lateinit var parent: View
+    private lateinit var cancelView: View
 
     private fun initViews() {
         tvSave = findViewById(R.id.tv_save)
         panel = findViewById(R.id.panel)
-        parent = findViewById(R.id.parent)
+        cancelView = findViewById(R.id.cancel_top)
     }
 
     override fun onClick(v: View?) {
         val isSave = v?.id == R.id.tv_save
-        if (isSave || v?.id == R.id.parent) {
+        if (isSave || v?.id == R.id.cancel_top) {
             if (isSave) save()
             collapse()
         }
@@ -107,9 +105,9 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         val toColor: Int
         if (isExpand) {
             fromColor = Color.parseColor("#00000000")
-            toColor = Color.parseColor("#66000000")
+            toColor = Color.parseColor("#8020252C")
         } else {
-            fromColor = Color.parseColor("#66000000")
+            fromColor = Color.parseColor("#8020252C")
             toColor = Color.parseColor("#00000000")
         }
 
@@ -117,14 +115,14 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         alphaAnim.setEvaluator(ArgbEvaluator())
         alphaAnim.addUpdateListener {
             val color = it.animatedValue as Int
-            parent.setBackgroundColor(color)
+            cancelView.setBackgroundColor(color)
         }
 
         animSet = AnimatorSet()
         if (isExpand || animEnd == null) {
-            animSet!!.duration = 400L
+            animSet!!.duration = 800L
         } else {
-            animSet!!.duration = 250L
+            animSet!!.duration = 1000L
         }
 
         animSet!!.interpolator = DecelerateInterpolator(1.2f)

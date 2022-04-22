@@ -2,13 +2,13 @@
 <com.tools.android.translator.ui.view.LanguagePanel xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <View
+        android:id="@+id/cancel_top"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="99dp"
         android:background="#8020252C" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
