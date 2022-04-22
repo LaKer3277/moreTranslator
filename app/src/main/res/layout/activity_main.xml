@@ -272,5 +272,9 @@
         app:layout_constraintEnd_toEndOf="@id/clear"
         app:layout_constraintTop_toBottomOf="@id/language" />
 
-
+    <com.tools.android.translator.ui.view.LanguagePanel
+        android:id="@+id/language_panel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </androidx.constraintlayout.widget.ConstraintLayout>
