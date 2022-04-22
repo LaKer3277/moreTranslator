@@ -36,7 +36,10 @@ android {
 }
 
 dependencies {
+
+    implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'com.google.mlkit:translate:17.0.0'
+
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
