@@ -27,5 +27,5 @@
         android:layout_height="0.5dp"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="15dp"
-        android:background="#A5ABB3" />
+        android:background="#26A5ABB3" />
 </RelativeLayout>

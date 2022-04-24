@@ -43,6 +43,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/img_exchange"
             android:layout_width="23dp"
             android:layout_height="23dp"
             android:src="@drawable/exchange"
@@ -57,6 +58,7 @@
             android:layout_height="22dp"
             android:layout_marginStart="20dp"
             android:src="@mipmap/language_en"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/bg_source"
             app:layout_constraintStart_toStartOf="@id/bg_source"
             app:layout_constraintTop_toTopOf="@id/bg_source" />
@@ -93,6 +95,7 @@
             android:layout_height="22dp"
             android:layout_marginStart="12dp"
             android:src="@mipmap/language_en"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/bg_target"
             app:layout_constraintStart_toStartOf="@id/bg_target"
             app:layout_constraintTop_toTopOf="@id/bg_target" />

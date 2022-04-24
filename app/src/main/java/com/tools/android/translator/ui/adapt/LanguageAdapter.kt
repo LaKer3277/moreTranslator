@@ -3,6 +3,7 @@ package com.tools.android.translator.ui.adapt
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +23,8 @@ class LanguageAdapter(
 ) : RecyclerView.Adapter<LanguageAdapter.VH>() {
 
     companion object {
+        //当前是否是源语言
+        var isCurrentSource = true
         var sourceLa = Language(App.ins.sourceLa)
         var targetLa = Language(App.ins.targetLa)
     }
@@ -35,6 +38,7 @@ class LanguageAdapter(
         val ivStatus: ImageView = item.findViewById(R.id.iv_status)
     }
 
+    private val rotate = AnimationUtils.loadAnimation(App.ins, R.anim.rotate)
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.item_language, parent, false)
         return VH(view)
@@ -61,6 +65,11 @@ class LanguageAdapter(
                 0 -> R.mipmap.status_downloading
                 else -> R.mipmap.status_delete
             })
+            if (language.isDownloading()) {
+                holder.ivStatus.startAnimation(rotate)
+            } else {
+                holder.ivStatus.clearAnimation()
+            }
         }
     }
 

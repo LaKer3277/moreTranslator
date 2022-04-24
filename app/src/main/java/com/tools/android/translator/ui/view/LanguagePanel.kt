@@ -8,6 +8,7 @@ import android.util.AttributeSet
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,17 +18,13 @@ import com.tools.android.translator.base.AnimatorListener
 import com.tools.android.translator.translate.Language
 import com.tools.android.translator.translate.languageList
 import com.tools.android.translator.ui.adapt.LanguageAdapter
+import com.tools.android.translator.ui.adapt.LanguageAdapter.Companion.isCurrentSource
 
 /**
  * Created on 2022/4/22
  * Describe:
  */
 class LanguagePanel: FrameLayout, View.OnClickListener {
-
-    companion object {
-        //当前是否是源语言
-        var isCurrentSource = true
-    }
 
     constructor(context: Context) : super(context, null) {
         visibility = View.INVISIBLE
@@ -56,6 +53,10 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     private var animSet: AnimatorSet? = null
     private var hasInflated = false
+
+    private lateinit var tvSource: TextView
+    private lateinit var tvTarget: TextView
+
     private lateinit var tvSave: TextView
     private lateinit var panel: View
     private lateinit var cancelView: View
@@ -72,22 +73,35 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     private val innerLangChoice = object :LanguageAdapter.ILangChoice {
         override fun onChoice(language: Language) {
-
             iLangChoice?.onChoice(language)
         }
     }
 
     private fun initViews(ctx: Context) {
+        tvSource = findViewById(R.id.tv_la_source)
+        tvTarget = findViewById(R.id.tv_la_target)
+        findViewById<ImageView>(R.id.img_exchange).setOnClickListener {
+            val lang = LanguageAdapter.sourceLa
+            LanguageAdapter.sourceLa = LanguageAdapter.targetLa
+            LanguageAdapter.targetLa = lang
+            freshLanguageUi()
+        }
+        freshLanguageUi()
+
         tvSave = findViewById(R.id.tv_save)
         panel = findViewById(R.id.panel)
         cancelView = findViewById(R.id.cancel_top)
         tvRecent = findViewById(R.id.tv_recently)
         rvRecent = findViewById(R.id.rv_recent)
+        rvRecent.layoutManager = LinearLayoutManager(ctx)
 
         recentAdapter = LanguageAdapter(true, arrayListOf(), innerLangChoice, isRecently = true)
         allAdapter = LanguageAdapter(true, languageList, innerLangChoice)
         rvAll = findViewById(R.id.rv_all)
         rvAll.layoutManager = LinearLayoutManager(ctx)
+
+        rvRecent.adapter = recentAdapter
+        rvAll.adapter = allAdapter
 
         App.ins.sourceOld.apply {
             if (this.contains(";")) {
@@ -143,6 +157,15 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         }
     }
 
+    private fun freshLanguageUi() {
+        LanguageAdapter.sourceLa.apply {
+            tvSource.text = displayName
+        }
+        LanguageAdapter.targetLa.apply {
+            tvTarget.text = displayName
+        }
+    }
+
     private fun addNewHistory(language: Language) {
         if (isCurrentSource) {
             if (!listHistorySource.contains(language)) {
@@ -190,6 +213,16 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     fun setChoiceListener(listener: LanguageAdapter.ILangChoice) {
         iLangChoice = listener
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun notifyAllAdapter() {
+        allAdapter.notifyDataSetChanged()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun notifyRecentAdapter() {
+        recentAdapter.notifyDataSetChanged()
     }
 
     private fun save() {
