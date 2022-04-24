@@ -1,6 +1,7 @@
 package com.tools.android.translator.ui.view
 
 import android.animation.*
+import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
@@ -8,10 +9,14 @@ import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
 import android.widget.TextView
-import androidx.constraintlayout.widget.Group
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.tools.android.translator.App
 import com.tools.android.translator.R
 import com.tools.android.translator.base.AnimatorListener
+import com.tools.android.translator.translate.Language
+import com.tools.android.translator.translate.languageList
+import com.tools.android.translator.ui.adapt.LanguageAdapter
 
 /**
  * Created on 2022/4/22
@@ -20,7 +25,8 @@ import com.tools.android.translator.base.AnimatorListener
 class LanguagePanel: FrameLayout, View.OnClickListener {
 
     companion object {
-
+        //当前是否是源语言
+        var isCurrentSource = true
     }
 
     constructor(context: Context) : super(context, null) {
@@ -37,7 +43,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     override fun onFinishInflate() {
         super.onFinishInflate()
-        initViews()
+        initViews(context)
         tvSave.setOnClickListener(this)
         cancelView.setOnClickListener(this)
         panel.post {
@@ -45,6 +51,8 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
             visibility = View.GONE
         }
     }
+
+    private var iLangChoice: LanguageAdapter.ILangChoice? = null
 
     private var animSet: AnimatorSet? = null
     private var hasInflated = false
@@ -54,13 +62,97 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     private lateinit var tvRecent: TextView
     private lateinit var rvRecent: RecyclerView
+    private lateinit var recentAdapter: LanguageAdapter
 
-    private fun initViews() {
+    private lateinit var rvAll: RecyclerView
+    private lateinit var allAdapter: LanguageAdapter
+
+    private val listHistorySource = arrayListOf<Language>()
+    private val listHistoryTarget = arrayListOf<Language>()
+
+    private val innerLangChoice = object :LanguageAdapter.ILangChoice {
+        override fun onChoice(language: Language) {
+
+            iLangChoice?.onChoice(language)
+        }
+    }
+
+    private fun initViews(ctx: Context) {
         tvSave = findViewById(R.id.tv_save)
         panel = findViewById(R.id.panel)
         cancelView = findViewById(R.id.cancel_top)
         tvRecent = findViewById(R.id.tv_recently)
         rvRecent = findViewById(R.id.rv_recent)
+
+        recentAdapter = LanguageAdapter(true, arrayListOf(), innerLangChoice, isRecently = true)
+        allAdapter = LanguageAdapter(true, languageList, innerLangChoice)
+        rvAll = findViewById(R.id.rv_all)
+        rvAll.layoutManager = LinearLayoutManager(ctx)
+
+        App.ins.sourceOld.apply {
+            if (this.contains(";")) {
+                val sp = this.split(";")
+                if (sp.isNotEmpty()) {
+                    for (s in sp) {
+                        listHistorySource.add(Language(code = s))
+                    }
+                }
+            }
+        }
+        App.ins.targetOld.apply {
+            if (this.contains(";")) {
+                val sp = this.split(";")
+                if (sp.isNotEmpty()) {
+                    for (s in sp) {
+                        listHistoryTarget.add(Language(code = s))
+                    }
+                }
+            }
+        }
+
+        notifyRealtime()
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun notifyRealtime() {
+        if (isCurrentSource) {
+            if (listHistorySource.isNotEmpty()) {
+                tvRecent.visibility = View.VISIBLE
+                rvRecent.visibility = View.VISIBLE
+
+                recentAdapter.isSource = true
+                recentAdapter.list = listHistorySource
+                recentAdapter.notifyDataSetChanged()
+            } else {
+                tvRecent.visibility = View.GONE
+                rvRecent.visibility = View.GONE
+            }
+            return
+        }
+
+        if (listHistoryTarget.isNotEmpty()) {
+            tvRecent.visibility = View.VISIBLE
+            rvRecent.visibility = View.VISIBLE
+
+            recentAdapter.isSource = false
+            recentAdapter.list = listHistoryTarget
+            recentAdapter.notifyDataSetChanged()
+        } else {
+            tvRecent.visibility = View.GONE
+            rvRecent.visibility = View.GONE
+        }
+    }
+
+    private fun addNewHistory(language: Language) {
+        if (isCurrentSource) {
+            if (!listHistorySource.contains(language)) {
+                App.ins.sourceOld = App.ins.sourceOld + ";${language.code}"
+            }
+        } else {
+            if (!listHistoryTarget.contains(language)) {
+                App.ins.targetOld = App.ins.targetOld + ";${language.code}"
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -89,6 +181,15 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         }
 
         return false
+    }
+
+    fun changeSide(isSource: Boolean) {
+        isCurrentSource = isSource
+        notifyRealtime()
+    }
+
+    fun setChoiceListener(listener: LanguageAdapter.ILangChoice) {
+        iLangChoice = listener
     }
 
     private fun save() {

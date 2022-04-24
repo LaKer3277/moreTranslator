@@ -9,7 +9,7 @@ import java.util.*
  * "English")
  */
 data class Language(
-    val code: String,
+    val code: String = "en",
     val displayName: String = Locale(code).displayName,
     var available: Int = -1  //-1: 不可用; 0:下载中; 1:可用
 ) : Comparable<Language> {
