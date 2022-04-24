@@ -42,6 +42,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
+                isTranslating = false
                 if (resultOrError.error != null) {
                     //srcTextView.setError(resultOrError.error!!.localizedMessage)
                 } else {
@@ -101,6 +102,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    private var isTranslating = false
     private var exchanging = false
     private fun initViews() {
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
@@ -132,6 +134,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         })
 
         binding.tvTranslate.setOnClickListener {
+            if (isTranslating) return@setOnClickListener
+            isTranslating = true
             mTrModel.sourceText.postValue(binding.etSource.text.toString())
         }
 
