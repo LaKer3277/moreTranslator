@@ -7,6 +7,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import com.tools.android.translator.App
 import com.tools.android.translator.R
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityMainBinding
@@ -44,9 +45,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 if (resultOrError.error != null) {
                     //srcTextView.setError(resultOrError.error!!.localizedMessage)
                 } else {
-                    if (resultOrError.result.isNullOrEmpty()) return@observe
+                    if (resultOrError.result.isNullOrEmpty()) {
+                        binding.groupResult.visibility = View.GONE
+                    } else {
+                        binding.groupResult.visibility = View.VISIBLE
+                    }
                     binding.groupTranslate.visibility = View.GONE
-                    binding.groupResult.visibility = View.VISIBLE
                     binding.tvResult.text = resultOrError.result
                 }
             }
@@ -97,14 +101,16 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    private var exchanging = false
     private fun initViews() {
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         binding.imgExchange.setOnClickListener {
-            val lang = LanguageAdapter.sourceLa
-            LanguageAdapter.sourceLa = LanguageAdapter.targetLa
-            LanguageAdapter.targetLa = lang
+            if (exchanging) return@setOnClickListener
+            exchanging = true
+            exchangeLanguage()
             freshLangUI()
+            exchanging = false
         }
         freshLangUI()
 
@@ -131,34 +137,50 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         binding.languagePanel.root.setChoiceListener(object :LanguageAdapter.ILangChoice{
             override fun onChoice(language: Language) {
+                if (!language.isAvailable()) return
+                if (isCurrentSource) {
+                    mTrModel.sourceLang.value = language
+                    LanguageAdapter.sourceLa = language
+                    App.ins.sourceLa = language.code
+                } else {
+                    mTrModel.targetLang.value = language
+                    LanguageAdapter.targetLa = language
+                    App.ins.targetLa = language.code
+                }
+                binding.languagePanel.root.collapse()
+                freshLangUI()
+            }
+
+            override fun onStatus(language: Language) {
                 if (isCurrentSource && language == LanguageAdapter.sourceLa) {
                     mTrModel.deleteLanguage(language)
                 } else if (!isCurrentSource && language == LanguageAdapter.targetLa) {
                     mTrModel.deleteLanguage(language)
                 } else {
-                    when {
-                        language.isAvailable() -> {
-                            if (isCurrentSource) {
-                                mTrModel.sourceLang.value = language
-                            } else {
-                                mTrModel.targetLang.value = language
-                            }
-                            binding.languagePanel.root.collapse()
-                            freshLangUI()
-                        }
-
-                        language.isUnavailable() -> {
-                            language.available = 0
-                            mTrModel.downloadLanguage(language)
-                        }
-
-                        else -> return
-                    }
+                    if (language.isUnavailable()) {
+                        language.available = 0
+                        mTrModel.downloadLanguage(language)
+                    } else return
                 }
-                binding.languagePanel.root.notifyRecentAdapter()
                 binding.languagePanel.root.notifyAllAdapter()
             }
         })
+
+        binding.clear.setOnClickListener {
+            binding.etSource.setText("")
+            mTrModel.sourceText.value = ""
+        }
+    }
+
+    private fun exchangeLanguage() {
+        val lang = LanguageAdapter.sourceLa
+        LanguageAdapter.sourceLa = LanguageAdapter.targetLa
+        LanguageAdapter.targetLa = lang
+
+        mTrModel.sourceLang.value = LanguageAdapter.sourceLa
+        mTrModel.targetLang.value = lang
+        App.ins.sourceLa = LanguageAdapter.sourceLa.code
+        App.ins.targetLa = LanguageAdapter.targetLa.code
     }
 
     private fun freshLangUI() {

@@ -231,6 +231,7 @@
         android:background="@null"
         android:gravity="start"
         android:hint="Please enter text..."
+        android:textColor="#A5ABB3"
         android:textColorHint="#A5ABB3"
         android:textSize="14sp"
         app:layout_constraintTop_toBottomOf="@id/language"

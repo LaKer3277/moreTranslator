@@ -31,9 +31,10 @@ class LanguageAdapter(
 
     interface ILangChoice {
         fun onChoice(language: Language)
+        fun onStatus(language: Language)
     }
 
-    inner class VH(item: View): RecyclerView.ViewHolder(item) {
+    inner class VH(val item: View): RecyclerView.ViewHolder(item) {
         val tvName: TextView = item.findViewById(R.id.tv_la)
         val ivStatus: ImageView = item.findViewById(R.id.iv_status)
     }
@@ -48,6 +49,9 @@ class LanguageAdapter(
         val language = list[position]
         holder.tvName.text = language.displayName
         holder.ivStatus.setOnClickListener {
+            iLangChoice?.onStatus(language)
+        }
+        holder.item.setOnClickListener {
             iLangChoice?.onChoice(language)
         }
         if (isRecently) {

@@ -75,6 +75,10 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         override fun onChoice(language: Language) {
             iLangChoice?.onChoice(language)
         }
+
+        override fun onStatus(language: Language) {
+            iLangChoice?.onStatus(language)
+        }
     }
 
     private fun initViews(ctx: Context) {
@@ -187,6 +191,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     }
 
     fun expand() {
+        freshLanguageUi()
         if (!hasInflated) {
             panel.post {
                 hasInflated = true
