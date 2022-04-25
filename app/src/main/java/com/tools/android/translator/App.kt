@@ -40,7 +40,7 @@ class App: Application() {
         }
 
     //翻译的源历史语言码
-    var sourceOld: String
+    var sourceHistory: String
         get() {
             return sp.getString("source_history", "") ?: ""
         }
@@ -48,7 +48,7 @@ class App: Application() {
             sp.edit().putString("source_history", value).apply()
         }
     //翻译的目标历史语言码
-    var targetOld: String
+    var targetHistory: String
         get() {
             return sp.getString("source_history", "") ?: ""
         }

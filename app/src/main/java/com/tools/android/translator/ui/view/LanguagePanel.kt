@@ -42,8 +42,9 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     override fun onFinishInflate() {
         super.onFinishInflate()
         initViews(context)
-        tvSave.setOnClickListener(this)
         cancelView.setOnClickListener(this)
+        findViewById<View>(R.id.bg_source).setOnClickListener(this)
+        findViewById<View>(R.id.bg_target).setOnClickListener(this)
         panel.post {
             hasInflated = true
             visibility = View.GONE
@@ -58,7 +59,6 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     private lateinit var tvSource: TextView
     private lateinit var tvTarget: TextView
 
-    private lateinit var tvSave: TextView
     private lateinit var panel: View
     private lateinit var cancelView: View
 
@@ -95,7 +95,6 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         }
         freshLanguageUi()
 
-        tvSave = findViewById(R.id.tv_save)
         panel = findViewById(R.id.panel)
         cancelView = findViewById(R.id.cancel_top)
         tvRecent = findViewById(R.id.tv_recently)
@@ -110,7 +109,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         rvRecent.adapter = recentAdapter
         rvAll.adapter = allAdapter
 
-        App.ins.sourceOld.apply {
+        App.ins.sourceHistory.apply {
             if (this.contains(";")) {
                 val sp = this.split(";")
                 if (sp.isNotEmpty()) {
@@ -118,9 +117,11 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
                         listHistorySource.add(Language(code = s))
                     }
                 }
+            } else if (this.isNotEmpty()) {
+                listHistorySource.add(Language(code = this))
             }
         }
-        App.ins.targetOld.apply {
+        App.ins.targetHistory.apply {
             if (this.contains(";")) {
                 val sp = this.split(";")
                 if (sp.isNotEmpty()) {
@@ -128,6 +129,8 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
                         listHistoryTarget.add(Language(code = s))
                     }
                 }
+            } else if (this.isNotEmpty()) {
+                listHistoryTarget.add(Language(code = this))
             }
         }
 
@@ -188,19 +191,21 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
             builder.append(la.code).append(";")
         }
         if (isSource) {
-            App.ins.sourceOld = builder.substring(0, builder.length - 1)
+            App.ins.sourceHistory = builder.substring(0, builder.length - 1)
         } else {
-            App.ins.targetOld = builder.substring(0, builder.length - 1)
+            App.ins.targetHistory = builder.substring(0, builder.length - 1)
         }
 
         notifyListSide()
     }
 
     override fun onClick(v: View?) {
-        val isSave = v?.id == R.id.tv_save
-        if (isSave || v?.id == R.id.cancel_top) {
-            if (isSave) save()
-            collapse()
+        when (v?.id) {
+            R.id.cancel_top -> collapse()
+
+            R.id.bg_source -> changeSide(true)
+
+            R.id.bg_target -> changeSide(false)
         }
     }
 
@@ -226,6 +231,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     }
 
     fun changeSide(isSource: Boolean) {
+        if (isSource == isCurrentSource) return
         isCurrentSource = isSource
         notifyListSide()
     }
