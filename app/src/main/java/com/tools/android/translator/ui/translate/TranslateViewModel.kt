@@ -38,25 +38,25 @@ class TranslateViewModel(application: Application) : AndroidViewModel(applicatio
         // Each instance of the translator is built with different options based on the source
         // language and the target language, and since we want to be able to manage the number of
         // translator instances to keep around, an LRU cache is an easy way to achieve this.
-        private const val NUM_TRANSLATORS = 3
+        private const val NUM_TRANSLATORS = 5
+        private val translators =
+            object : LruCache<TranslatorOptions, Translator>(NUM_TRANSLATORS) {
+                override fun create(options: TranslatorOptions): Translator {
+                    return Translation.getClient(options)
+                }
+
+                override fun entryRemoved(
+                    evicted: Boolean,
+                    key: TranslatorOptions,
+                    oldValue: Translator,
+                    newValue: Translator?
+                ) {
+                    oldValue.close()
+                }
+            }
     }
 
     private val modelManager: RemoteModelManager = RemoteModelManager.getInstance()
-    private val translators =
-        object : LruCache<TranslatorOptions, Translator>(NUM_TRANSLATORS) {
-            override fun create(options: TranslatorOptions): Translator {
-                return Translation.getClient(options)
-            }
-
-            override fun entryRemoved(
-                evicted: Boolean,
-                key: TranslatorOptions,
-                oldValue: Translator,
-                newValue: Translator?
-            ) {
-                oldValue.close()
-            }
-        }
     val sourceLang = MutableLiveData<Language>()
     val targetLang = MutableLiveData<Language>()
     val sourceText = MutableLiveData<String>()
@@ -145,13 +145,4 @@ class TranslateViewModel(application: Application) : AndroidViewModel(applicatio
 
     /** Holds the result of the translation or any error. */
     inner class ResultOrError(var result: String?, var error: Exception?)
-
-
-    override fun onCleared() {
-        super.onCleared()
-        // Each new instance of a translator needs to be closed appropriately. Here we utilize the
-        // ViewModel's onCleared() to clear our LruCache and close each Translator instance when
-        // this ViewModel is no longer used and destroyed.
-        translators.evictAll()
-    }
 }

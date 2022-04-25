@@ -1,11 +1,15 @@
 package com.tools.android.translator.ui.translate
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.tools.android.translator.App
 import com.tools.android.translator.R
@@ -37,40 +41,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             tvSetting.setOnClickListener(this@MainActivity)
         }
         mTrModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(TranslateViewModel::class.java)
-        initViews()
-
-        mTrModel.translatedText.observe(
-            this,
-            { resultOrError ->
-                isTranslating = false
-                if (resultOrError.error != null) {
-                    //srcTextView.setError(resultOrError.error!!.localizedMessage)
-                } else {
-                    if (resultOrError.result.isNullOrEmpty()) {
-                        binding.groupResult.visibility = View.GONE
-                    } else {
-                        binding.groupResult.visibility = View.VISIBLE
-                    }
-                    binding.groupTranslate.visibility = View.GONE
-                    binding.tvResult.text = resultOrError.result
-                }
-            }
-        )
-
-        // Update sync toggle button states based on downloaded models list.
-        mTrModel.availableModels.observe(this) {
-            /*languageList.forEach { lang ->
-                if (lang.available != 1)
-                    lang.available = -1
-            }*/
-            for (la in languageList) {
-                if (it.contains(la.code)) {
-                    la.available = 1
-                } else {
-                    la.available = -1
-                }
-            }
-            binding.languagePanel.root.notifyAllAdapter()
+        initLanguageViews()
+        binding.clear.setOnClickListener {
+            binding.etSource.setText("")
+            mTrModel.sourceText.value = ""
         }
     }
 
@@ -98,7 +72,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
 
-            R.id.iv_camera, R.id.tv_camera -> startActivity(Intent(this, CameraActivity::class.java))
+            R.id.iv_camera, R.id.tv_camera -> {
+                if (checkCameraPermission()) {
+                    startActivity(Intent(this, CameraActivity::class.java))
+                }
+            }
 
             R.id.iv_setting, R.id.tv_setting -> startActivity(Intent(this, SettingsActivity::class.java))
         }
@@ -106,7 +84,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     private var isTranslating = false
     private var exchanging = false
-    private fun initViews() {
+    private fun initLanguageViews() {
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         binding.imgExchange.setOnClickListener {
@@ -169,9 +147,38 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             }
         })
 
-        binding.clear.setOnClickListener {
-            binding.etSource.setText("")
-            mTrModel.sourceText.value = ""
+        mTrModel.translatedText.observe(
+            this,
+            { resultOrError ->
+                isTranslating = false
+                if (resultOrError.error != null) {
+                    //srcTextView.setError(resultOrError.error!!.localizedMessage)
+                } else {
+                    if (resultOrError.result.isNullOrEmpty()) {
+                        binding.groupResult.visibility = View.GONE
+                    } else {
+                        binding.groupResult.visibility = View.VISIBLE
+                    }
+                    binding.groupTranslate.visibility = View.GONE
+                    binding.tvResult.text = resultOrError.result
+                }
+            }
+        )
+
+        // Update sync toggle button states based on downloaded models list.
+        mTrModel.availableModels.observe(this) {
+            /*languageList.forEach { lang ->
+                if (lang.available != 1)
+                    lang.available = -1
+            }*/
+            for (la in languageList) {
+                if (it.contains(la.code)) {
+                    la.available = 1
+                } else {
+                    la.available = -1
+                }
+            }
+            binding.languagePanel.root.notifyAllAdapter()
         }
     }
 
@@ -206,5 +213,24 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             binding.groupTranslate.visibility = View.GONE
             binding.clear.visibility = View.GONE
         }
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivity(Intent(this, CameraActivity::class.java))
+            }
+        }
+    }
+
+    private fun checkCameraPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) return true
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
+        return false
     }
 }

@@ -4,7 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.tools.android.translator.App
 
 /**
  * Created on 2022/4/20
@@ -73,5 +75,13 @@ open class BaseActivity: AppCompatActivity() {
         val imm = view.context
             .getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         imm?.toggleSoftInput(0, 0)
+    }
+
+    fun toastLong(msg: String) {
+        Toast.makeText(App.ins, msg, Toast.LENGTH_LONG).show()
+    }
+
+    fun toastShort(msg: String) {
+        Toast.makeText(App.ins, msg, Toast.LENGTH_SHORT).show()
     }
 }
