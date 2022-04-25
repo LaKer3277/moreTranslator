@@ -19,6 +19,7 @@ import com.tools.android.translator.translate.Language
 import com.tools.android.translator.translate.languageList
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.adapt.LanguageAdapter.Companion.isCurrentSource
+import java.lang.StringBuilder
 
 /**
  * Created on 2022/4/22
@@ -74,6 +75,8 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     private val innerLangChoice = object :LanguageAdapter.ILangChoice {
         override fun onChoice(language: Language) {
             iLangChoice?.onChoice(language)
+            if (!language.isAvailable()) return
+            addNewHistory(language)
         }
 
         override fun onStatus(language: Language) {
@@ -128,11 +131,11 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
             }
         }
 
-        notifyRealtime()
+        notifyListSide()
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private fun notifyRealtime() {
+    private fun notifyListSide() {
         if (isCurrentSource) {
             if (listHistorySource.isNotEmpty()) {
                 tvRecent.visibility = View.VISIBLE
@@ -170,16 +173,27 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
         }
     }
 
+    @Synchronized
     private fun addNewHistory(language: Language) {
-        if (isCurrentSource) {
-            if (!listHistorySource.contains(language)) {
-                App.ins.sourceOld = App.ins.sourceOld + ";${language.code}"
-            }
-        } else {
-            if (!listHistoryTarget.contains(language)) {
-                App.ins.targetOld = App.ins.targetOld + ";${language.code}"
-            }
+        val isSource = isCurrentSource
+        val listHistory = if (isSource) listHistorySource else listHistoryTarget
+        if (listHistory.contains(language)) return
+
+        listHistory.add(0, language)
+        if (listHistory.size > 5) {
+            listHistory.removeAt(5)
         }
+        val builder = StringBuilder()
+        for (la in listHistory) {
+            builder.append(la.code).append(";")
+        }
+        if (isSource) {
+            App.ins.sourceOld = builder.substring(0, builder.length - 1)
+        } else {
+            App.ins.targetOld = builder.substring(0, builder.length - 1)
+        }
+
+        notifyListSide()
     }
 
     override fun onClick(v: View?) {
@@ -213,7 +227,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
 
     fun changeSide(isSource: Boolean) {
         isCurrentSource = isSource
-        notifyRealtime()
+        notifyListSide()
     }
 
     fun setChoiceListener(listener: LanguageAdapter.ILangChoice) {
