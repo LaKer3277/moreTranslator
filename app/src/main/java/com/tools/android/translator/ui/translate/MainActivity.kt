@@ -59,13 +59,15 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         // Update sync toggle button states based on downloaded models list.
         mTrModel.availableModels.observe(this) {
-            languageList.forEach { lang ->
+            /*languageList.forEach { lang ->
                 if (lang.available != 1)
                     lang.available = -1
-            }
+            }*/
             for (la in languageList) {
                 if (it.contains(la.code)) {
                     la.available = 1
+                } else {
+                    la.available = -1
                 }
             }
             binding.languagePanel.root.notifyAllAdapter()
@@ -113,6 +115,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             exchangeLanguage()
             freshLangUI()
             exchanging = false
+            //textChangedForTranslatePrepared()
         }
         freshLangUI()
 
@@ -121,15 +124,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {}
             override fun afterTextChanged(s: Editable) {
-                binding.groupResult.visibility = View.GONE
-                //setProgressText(targetTextView)
-                if (s.isNotEmpty()) {
-                    binding.groupTranslate.visibility = View.VISIBLE
-                    binding.clear.visibility = View.VISIBLE
-                } else {
-                    binding.groupTranslate.visibility = View.GONE
-                    binding.clear.visibility = View.GONE
-                }
+                textChangedForTranslatePrepared()
             }
         })
 
@@ -140,6 +135,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
 
         binding.languagePanel.root.setChoiceListener(object :LanguageAdapter.ILangChoice{
+            //选择语言
             override fun onChoice(language: Language) {
                 if (!language.isAvailable()) return
                 if (isCurrentSource) {
@@ -155,16 +151,19 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 freshLangUI()
             }
 
+            //下载 / 删除
             override fun onStatus(language: Language) {
-                if (isCurrentSource && language == LanguageAdapter.sourceLa) {
-                    mTrModel.deleteLanguage(language)
-                } else if (!isCurrentSource && language == LanguageAdapter.targetLa) {
-                    mTrModel.deleteLanguage(language)
+                //下载
+                if (language.isUnavailable()) {
+                    language.available = 0
+                    mTrModel.downloadLanguage(language)
                 } else {
-                    if (language.isUnavailable()) {
-                        language.available = 0
-                        mTrModel.downloadLanguage(language)
-                    } else return
+                    if ((isCurrentSource && language == LanguageAdapter.sourceLa)
+                        || (!isCurrentSource && language == LanguageAdapter.targetLa)) {
+                        return
+                    } else {
+                        mTrModel.deleteLanguage(language)
+                    }
                 }
                 binding.languagePanel.root.notifyAllAdapter()
             }
@@ -194,6 +193,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
         mTrModel.targetLang.value?.apply {
             binding.tvLaTarget.text = displayName
+        }
+    }
+
+    private fun textChangedForTranslatePrepared() {
+        binding.groupResult.visibility = View.GONE
+        //setProgressText(targetTextView)
+        if (binding.etSource.text.isNotEmpty()) {
+            binding.groupTranslate.visibility = View.VISIBLE
+            binding.clear.visibility = View.VISIBLE
+        } else {
+            binding.groupTranslate.visibility = View.GONE
+            binding.clear.visibility = View.GONE
         }
     }
 }
