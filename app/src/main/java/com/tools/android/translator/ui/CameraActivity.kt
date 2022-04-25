@@ -7,7 +7,7 @@ import android.graphics.*
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.TextPaint
+import android.text.method.ScrollingMovementMethod
 import android.util.Size
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
@@ -37,7 +37,6 @@ import com.tools.android.translator.translate.languageList
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.translate.TranslateViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
@@ -68,7 +67,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         mPreviewView = binding.previewView
 
         lifecycleScope.launch(Dispatchers.IO) {
-            while (mPreviewView.width == 0) delay(10)
+            while (mPreviewView.width == 0) delay(20)
             startCamera()
         }
         choosePicture = registerForActivityResult(ChoosePicture()) {
@@ -183,6 +182,10 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         parseBitmap?.recycle()
         parseBitmap = null
         startCamera()
+
+        try {
+            File(cacheDir, "itrans_alum.jpg").delete()
+        } catch (e: Exception) {}
     }
 
     private fun startCamera() {
@@ -289,6 +292,8 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     private var isTranslating = false
     private var exchanging = false
     private fun initLanguageViews() {
+        binding.resultTv.isVerticalScrollBarEnabled = true
+        binding.resultTv.movementMethod = ScrollingMovementMethod.getInstance()
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         binding.imgExchange.setOnClickListener {
