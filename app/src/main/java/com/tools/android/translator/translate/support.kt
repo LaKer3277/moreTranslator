@@ -8,14 +8,22 @@ import com.tools.android.translator.R
  */
 val languageList = arrayListOf<Language>(
     Language("en", available = 1),
-    Language("de"),
     Language("ar"),
+    Language("be"),
+    Language("bg"),
+    Language("de"),
+    Language("eo"),
+    Language("es"),
+    Language("fi"),
     Language("fr"),
     Language("ja"),
     Language("ko"),
-    Language("pl"),
-    Language("es"),
     Language("pt"),
+    Language("pl"),
+    Language("tr"),
+    Language("it"),
+    Language("sv"),
+    Language("uk"),
     Language("zh"),
 )
 

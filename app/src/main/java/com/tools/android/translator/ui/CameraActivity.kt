@@ -343,6 +343,8 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         binding.imgExchange.setOnClickListener {
             if (exchanging) return@setOnClickListener
             exchanging = true
+            //先清空之前的翻译内容
+            mTrModel.sourceText.value = ""
             exchangeLanguage()
             freshLangUI()
             exchanging = false
