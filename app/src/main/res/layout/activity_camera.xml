@@ -35,6 +35,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="17dp"
         android:background="@drawable/d_8020252c_r18"
+        android:onClick="onClick"
         app:layout_constraintEnd_toStartOf="@id/bg_target"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
@@ -48,6 +49,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="20dp"
         android:background="@drawable/d_8020252c_r18"
+        android:onClick="onClick"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/bg_source"
         app:layout_constraintTop_toTopOf="parent" />

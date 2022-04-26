@@ -40,6 +40,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.io.File
+import android.content.ClipData
+import android.content.ClipboardManager
 
 /**
  * Created on 2022/4/22
@@ -53,6 +55,22 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
 
     private lateinit var mTrModel: TranslateViewModel
     private lateinit var mPreviewView: PreviewView
+    private var displayId: Int = -1
+    /**
+     * We need a display listener for orientation changes that do not trigger a configuration
+     * change, for example if we choose to override config change in manifest or for 180-degree
+     * orientation changes.
+     */
+    /*private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayAdded(displayId: Int) = Unit
+        override fun onDisplayRemoved(displayId: Int) = Unit
+        override fun onDisplayChanged(displayId: Int) = view?.let { view ->
+            if (displayId == this@CameraActivity.displayId) {
+                //Log.d(TAG, "Rotation changed: ${view.display.rotation}")
+                imageCapture?.targetRotation = view.display.rotation
+            }
+        } ?: Unit
+    }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.includeNav.apply {
@@ -65,6 +83,9 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             tvSetting.setOnClickListener(this@CameraActivity)
         }
         mPreviewView = binding.previewView
+        mPreviewView.post {
+            displayId = mPreviewView.display.displayId
+        }
 
         lifecycleScope.launch(Dispatchers.IO) {
             while (mPreviewView.width == 0) delay(20)
@@ -94,7 +115,25 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             R.id.iv_close -> cancelRecognize()
 
             R.id.copy -> {
+                val cm: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                val mClipData = ClipData.newPlainText("Label", binding.resultTv.text)
+                cm.setPrimaryClip(mClipData)
+            }
 
+            R.id.bg_source -> {
+                binding.languagePanel.root.apply {
+                    expand()
+                    if (!LanguageAdapter.isCurrentSource)
+                        changeSide(true)
+                }
+            }
+
+            R.id.bg_target -> {
+                binding.languagePanel.root.apply {
+                    expand()
+                    if (LanguageAdapter.isCurrentSource)
+                        changeSide(false)
+                }
             }
         }
     }
@@ -104,12 +143,10 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     private lateinit var choosePicture: ActivityResultLauncher<Void?>
     //private var recognizeDialog = LoadingDialog().apply { setMessage("Recognizing...") }
     private var parseBitmap: Bitmap? = null
-    private var origin: Language = LanguageAdapter.sourceLa
-    private var target: Language = LanguageAdapter.targetLa
     private var recognized = false
 
     private val recognizer by lazy {
-        when (origin.code) {
+        when (LanguageAdapter.sourceLa.code) {
             "zh" -> TextRecognition.getClient(ChineseTextRecognizerOptions.Builder().build())
             "ja" -> TextRecognition.getClient(JapaneseTextRecognizerOptions.Builder().build())
             "ko" -> TextRecognition.getClient(KoreanTextRecognizerOptions.Builder().build())
@@ -141,7 +178,6 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     private fun recognizeTextOnDevice(image: InputImage): Task<Text> {
         return recognizer.process(image)
             .addOnSuccessListener { visionText ->
-                binding.layoutLoading.visibility = View.GONE
                 try {
                     successRecognize(visionText)
                 } catch (e: Exception) {
@@ -162,10 +198,13 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     private fun successRecognize(visionText: Text) {
         if (visionText.text.isEmpty() && visionText.textBlocks.isEmpty()) {
             toastLong("Text not recognized")
+            binding.layoutLoading.visibility = View.GONE
         } else {
             recognized = true
-            binding.groupResult.visibility = View.VISIBLE
-            binding.resultTv.text = visionText.text
+            mTrModel.sourceText.value = visionText.text
+            isTranslating = true
+            //binding.groupResult.visibility = View.VISIBLE
+            //binding.resultTv.text = visionText.text
         }
     }
 
@@ -217,7 +256,14 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
         val photoFile = File(cacheDir, "itrans_alum.jpg")
-        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile).build()
+        // Setup image capture metadata
+        val metadata = ImageCapture.Metadata().apply {
+            // Mirror image when using the front camera
+            isReversedHorizontal = false
+        }
+        val outputOptions = ImageCapture.OutputFileOptions.Builder(photoFile)
+            .setMetadata(metadata)
+            .build()
 
         imageCapture.takePicture(
             outputOptions,
@@ -344,6 +390,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
+                binding.layoutLoading.visibility = View.GONE
                 isTranslating = false
                 if (resultOrError.error != null) {
                     //srcTextView.setError(resultOrError.error!!.localizedMessage)
