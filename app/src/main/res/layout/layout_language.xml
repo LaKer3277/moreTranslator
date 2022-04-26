@@ -137,8 +137,10 @@
             android:hint="Search..."
             android:paddingStart="12dp"
             android:paddingEnd="12dp"
+            android:textColor="#D5D4D4"
             android:textColorHint="#D5D4D4"
             android:textSize="12sp"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@id/bg_source"
             tools:ignore="HardcodedText" />
 

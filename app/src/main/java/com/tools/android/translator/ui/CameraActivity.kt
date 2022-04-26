@@ -170,6 +170,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             cancelRecognize()
             return
         }
+        if (binding.languagePanel.root.collapse()) return
         super.onBackPressed()
     }
 
