@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.method.ScrollingMovementMethod
-import android.util.Size
 import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContract
@@ -42,6 +41,8 @@ import kotlinx.coroutines.launch
 import java.io.File
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.util.Size
+import com.tools.android.translator.support.BitmapUtils
 
 /**
  * Created on 2022/4/22
@@ -92,7 +93,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             startCamera()
         }
         choosePicture = registerForActivityResult(ChoosePicture()) {
-            showImage(false, it)
+            showImage(it)
         }
 
         mTrModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(TranslateViewModel::class.java)
@@ -176,7 +177,6 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         binding.groupLanguage.visibility = View.GONE
         binding.layoutLoading.visibility = View.VISIBLE
         binding.progressBar.show()
-        binding.ivClose.visibility = View.VISIBLE
         try {
             recognizeTextOnDevice(InputImage.fromBitmap(parseBitmap!!, 0))
         } catch (e: Exception) {
@@ -212,8 +212,6 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             recognized = true
             mTrModel.sourceText.value = visionText.text
             isTranslating = true
-            //binding.groupResult.visibility = View.VISIBLE
-            //binding.resultTv.text = visionText.text
         }
     }
 
@@ -225,7 +223,6 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         binding.groupLanguage.visibility = View.VISIBLE
         mPreviewView.visibility = View.VISIBLE
         binding.imgSelect.visibility = View.GONE
-        binding.ivClose.visibility = View.GONE
         binding.groupResult.visibility = View.GONE
         parseBitmap?.recycle()
         parseBitmap = null
@@ -282,34 +279,26 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                 }
 
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    showImage(true)
+                    showImage(Uri.fromFile(photoFile))
                 }
             })
     }
 
-    private fun showImage(saved: Boolean, uri: Uri? = null) {
+    private fun showImage(uri: Uri? = null) {
         recognized = false
-        if (uri == null && !saved) {
-            return
-        }
+        if (uri == null) return
         try {
             mPreviewView.visibility = View.GONE
             binding.imgSelect.visibility = View.VISIBLE
-            if (saved) {
-                parseBitmap =
-                    BitmapFactory.decodeFile(File(cacheDir, "itrans_alum.jpg").absolutePath)
-                binding.imgSelect.setImageBitmap(parseBitmap)
-            } else {
-                parseBitmap = BitmapFactory.decodeStream(contentResolver.openInputStream(uri!!))
-                scaleBitmap(parseBitmap)
-                binding.imgSelect.setImageBitmap(parseBitmap)
-            }
+            parseBitmap = BitmapUtils.getBitmapFromContentUri(contentResolver, uri)
+            //BitmapFactory.decodeStream(contentResolver.openInputStream(uri))
+            scaleBitmap(parseBitmap)
+            binding.imgSelect.setImageBitmap(parseBitmap)
 
             //自动识别
             begin2autoRecognize()
         } catch (e: Exception) {
-            mPreviewView.visibility = View.VISIBLE
-            binding.imgSelect.visibility = View.GONE
+            cancelRecognize()
         }
     }
 
@@ -321,7 +310,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         val scaleH = mPreviewView.height * 1.0F / height
         val scale = maxOf(scaleW, scaleH)
         val matrix = Matrix()
-        matrix.postScale(scale, scale)
+        matrix.postScale(scaleW, scaleH)
         Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false)
     }
 

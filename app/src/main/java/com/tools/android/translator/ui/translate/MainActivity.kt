@@ -97,6 +97,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             exchanging = true
             exchangeLanguage()
             freshLangUI()
+            //清除文本
+            mTrModel.sourceText.postValue("")
             exchanging = false
             //textChangedForTranslatePrepared()
         }
@@ -124,6 +126,9 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     mTrModel.sourceLang.value = language
                     LanguageAdapter.sourceLa = language
                     App.ins.sourceLa = language.code
+                    //清除翻译内容并弹出软键盘
+                    mTrModel.sourceText.postValue("")
+                    showKeyboard(binding.etSource)
                 } else {
                     mTrModel.targetLang.value = language
                     LanguageAdapter.targetLa = language
