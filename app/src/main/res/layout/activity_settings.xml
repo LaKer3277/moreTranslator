@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#293038">
@@ -24,10 +25,12 @@
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="12dp"
         android:gravity="center_vertical"
+        android:onClick="onClick"
         android:text="Rate us"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/tv_privacy"
@@ -38,10 +41,12 @@
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="12dp"
         android:gravity="center_vertical"
+        android:onClick="onClick"
         android:text="Privacy Policy"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_rate" />
+        app:layout_constraintTop_toBottomOf="@id/tv_rate"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/tv_feedback"
@@ -52,10 +57,12 @@
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="12dp"
         android:gravity="center_vertical"
+        android:onClick="onClick"
         android:text="Feedback"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintTop_toBottomOf="@id/tv_privacy" />
+        app:layout_constraintTop_toBottomOf="@id/tv_privacy"
+        tools:ignore="HardcodedText" />
 
     <include
         android:id="@+id/include_nav"

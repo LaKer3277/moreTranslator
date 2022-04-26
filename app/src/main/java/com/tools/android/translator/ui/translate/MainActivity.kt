@@ -48,6 +48,13 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        mTrModel.sourceLang.value = LanguageAdapter.sourceLa
+        mTrModel.targetLang.value = LanguageAdapter.targetLa
+        freshLangUI()
+    }
+
     override fun onBackPressed() {
         if (hideKeyboard(binding.etSource)) return
         if (binding.languagePanel.root.collapse()) return
@@ -85,8 +92,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private var isTranslating = false
     private var exchanging = false
     private fun initLanguageViews() {
-        mTrModel.sourceLang.value = LanguageAdapter.sourceLa
-        mTrModel.targetLang.value = LanguageAdapter.targetLa
         binding.imgExchange.setOnClickListener {
             if (exchanging) return@setOnClickListener
             exchanging = true
@@ -95,7 +100,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             exchanging = false
             //textChangedForTranslatePrepared()
         }
-        freshLangUI()
 
         // Translate input text as it is typed
         binding.etSource.addTextChangedListener(object : TextWatcher {

@@ -118,6 +118,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                 val cm: ClipboardManager = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 val mClipData = ClipData.newPlainText("Label", binding.resultTv.text)
                 cm.setPrimaryClip(mClipData)
+                toastShort("Copied")
             }
 
             R.id.bg_source -> {
@@ -161,6 +162,14 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         super.onDestroy()
         choosePicture.unregister()
         parseBitmap?.recycle()
+    }
+
+    override fun onBackPressed() {
+        if (binding.layoutLoading.visibility == View.VISIBLE) {
+            cancelRecognize()
+            return
+        }
+        super.onBackPressed()
     }
 
     private fun begin2autoRecognize() {
