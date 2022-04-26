@@ -43,8 +43,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory(application)).get(TranslateViewModel::class.java)
         initLanguageViews()
         binding.clear.setOnClickListener {
-            binding.etSource.setText("")
-            mTrModel.sourceText.value = ""
+            clearEtText()
         }
     }
 
@@ -89,16 +88,20 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         }
     }
 
+    private fun clearEtText() {
+        binding.etSource.setText("")
+    }
+
     private var isTranslating = false
     private var exchanging = false
     private fun initLanguageViews() {
         binding.imgExchange.setOnClickListener {
             if (exchanging) return@setOnClickListener
             exchanging = true
+            //清除文本
+            clearEtText()
             exchangeLanguage()
             freshLangUI()
-            //清除文本
-            mTrModel.sourceText.postValue("")
             exchanging = false
             //textChangedForTranslatePrepared()
         }
@@ -127,7 +130,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     LanguageAdapter.sourceLa = language
                     App.ins.sourceLa = language.code
                     //清除翻译内容并弹出软键盘
-                    mTrModel.sourceText.postValue("")
+                    clearEtText()
                     showKeyboard(binding.etSource)
                 } else {
                     mTrModel.targetLang.value = language
@@ -221,6 +224,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         } else {
             binding.groupTranslate.visibility = View.GONE
             binding.clear.visibility = View.GONE
+            mTrModel.sourceText.value = ""
         }
     }
 
