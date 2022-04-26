@@ -49,6 +49,10 @@
             android:name=".ui.WebActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
+
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_id" />
     </application>
 
 </manifest>

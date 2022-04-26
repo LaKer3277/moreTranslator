@@ -1,13 +1,15 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'  // Google Services plugin
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
     compileSdk 31
-
+    //transgroup123
     defaultConfig {
-        applicationId "com.tools.android.translator"
+        applicationId "com.iTranslator.instanttool"
         minSdk 21
         targetSdk 31
         versionCode 100
@@ -38,6 +40,13 @@ android {
 }
 
 dependencies {
+    implementation 'com.facebook.android:facebook-android-sdk:12.3.0'
+
+    // Import the Firebase BoM
+    implementation platform('com.google.firebase:firebase-bom:29.3.1')
+    // Declare the dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-crashlytics'
 
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'com.google.mlkit:translate:17.0.0'
