@@ -19,3 +19,29 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontskipnonpubliclibraryclassmembers
+-printmapping proguard.map
+-renamesourcefileattribute ProGuard
+-keepattributes SourceFile,LineNumberTable
+-dontwarn oauth.signpost.signature.**
+-ignorewarnings
+
+-optimizations !code/simplification/arithmetic,!code/simplification/cast,!field/*,!class/merging/*
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+# 保护代码中的Annotation不被混淆
+-keepattributes *Annotation*,InnerClasses
+# 排除所有注解类
+-keep class * extends java.lang.annotation.Annotation { *; }
+-keep interface * extends java.lang.annotation.Annotation { *; }
+
+
+-assumenosideeffects class android.util.Log{
+    public static *** d(...);
+    public static *** i(...);
+    public static *** e(...);
+    public static *** w(...);
+    public static *** v(...);
+}
