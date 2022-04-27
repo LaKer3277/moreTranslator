@@ -3,6 +3,7 @@ package com.tools.android.translator
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import com.tools.android.translator.support.RemoteConfig
 
 /**
  * Created on 2022/4/20
@@ -12,6 +13,7 @@ class App: Application() {
 
     companion object {
         lateinit var ins: App
+        const val isRelease = false
     }
 
     private lateinit var sp: SharedPreferences
@@ -19,6 +21,8 @@ class App: Application() {
         super.onCreate()
         ins = this
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
+
+        //RemoteConfig.ins.init()
     }
 
 

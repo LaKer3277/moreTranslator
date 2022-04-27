@@ -20,7 +20,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 -dontskipnonpubliclibraryclassmembers
--printmapping proguard.map
+#-printmapping proguard.map
 -renamesourcefileattribute ProGuard
 -keepattributes SourceFile,LineNumberTable
 -dontwarn oauth.signpost.signature.**
