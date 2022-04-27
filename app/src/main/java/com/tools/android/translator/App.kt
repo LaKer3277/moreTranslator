@@ -8,6 +8,7 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdActivity
+import com.google.android.gms.ads.MobileAds
 import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
@@ -33,6 +34,7 @@ class App: Application() {
         ins = this
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 
+        MobileAds.initialize(this)
         //RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())
     }
@@ -41,6 +43,12 @@ class App: Application() {
     private var nForeActivity = 0
     private var delayJob: Job? = null
     private var bHotLoading = false
+    //屏蔽本次热启动
+    private var blockHot = false
+
+    fun blockOnceHot() {
+        blockHot = true
+    }
 
     fun isAppForeground(): Boolean {
         return nForeActivity > 0
@@ -57,11 +65,12 @@ class App: Application() {
                 delayJob?.cancel()
                 if (activity !is AdActivity
                     && activity !is LoadingActivity) {
-                    if (bHotLoading) {
-                        bHotLoading = false
+                    if (!blockHot && bHotLoading) {
                         LoadingActivity.restart(activity)
                         needFreshNav = false
                     }
+                    blockHot = false
+                    bHotLoading = false
                 }
             }
         }

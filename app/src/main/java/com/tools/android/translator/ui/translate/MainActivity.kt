@@ -177,19 +177,29 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
-                isTranslating = false
                 showLoading(false)
-                showInterstitial {if (resultOrError.error != null) {
-                    //srcTextView.setError(resultOrError.error!!.localizedMessage)
-                } else {
-                    if (resultOrError.result.isNullOrEmpty()) {
-                        binding.groupResult.visibility = View.GONE
+
+                val showTxt = {
+                    if (resultOrError.error != null) {
+                        //srcTextView.setError(resultOrError.error!!.localizedMessage)
                     } else {
-                        binding.groupResult.visibility = View.VISIBLE
+                        if (resultOrError.result.isNullOrEmpty()) {
+                            binding.groupResult.visibility = View.GONE
+                        } else {
+                            binding.groupResult.visibility = View.VISIBLE
+                        }
+                        binding.groupTranslate.visibility = View.GONE
+                        binding.tvResult.text = resultOrError.result
                     }
-                    binding.groupTranslate.visibility = View.GONE
-                    binding.tvResult.text = resultOrError.result
                 }
+
+                if (isTranslating) {
+                    isTranslating = false
+                    showInterstitial {
+                        showTxt.invoke()
+                    }
+                } else {
+                    showTxt.invoke()
                 }
             }
         )

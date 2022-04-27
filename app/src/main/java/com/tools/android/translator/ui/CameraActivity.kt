@@ -121,7 +121,10 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
 
             R.id.camera1 -> takePhoto()
 
-            R.id.iv_album -> choosePicture.launch(null)
+            R.id.iv_album -> {
+                App.ins.blockOnceHot()
+                choosePicture.launch(null)
+            }
 
             R.id.iv_close -> cancelRecognize()
 
@@ -402,8 +405,8 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             this,
             { resultOrError ->
                 binding.layoutLoading.visibility = View.GONE
-                isTranslating = false
-                showInterstitial {
+
+                val showTxtAction = {
                     if (resultOrError.error != null) {
                         //srcTextView.setError(resultOrError.error!!.localizedMessage)
                     } else {
@@ -414,6 +417,15 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                         }
                         binding.resultTv.text = resultOrError.result
                     }
+                }
+
+                if (isTranslating) {
+                    isTranslating = false
+                    showInterstitial {
+                        showTxtAction.invoke()
+                    }
+                } else {
+                    showTxtAction.invoke()
                 }
             }
         )
