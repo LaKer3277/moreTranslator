@@ -1,9 +1,20 @@
 package com.tools.android.translator
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
+import android.os.Bundle
+import android.util.Log
+import com.google.android.gms.ads.AdActivity
 import com.tools.android.translator.support.RemoteConfig
+import com.tools.android.translator.ui.LoadingActivity
+import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Created on 2022/4/20
@@ -23,8 +34,62 @@ class App: Application() {
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 
         //RemoteConfig.ins.init()
+        registerActivityLifecycleCallbacks(ActivityLifecycle())
     }
 
+    //存在的前台Activity 数量
+    private var nForeActivity = 0
+    private var delayJob: Job? = null
+    private var bHotLoading = false
+
+    fun isAppForeground(): Boolean {
+        return nForeActivity > 0
+    }
+
+    @SuppressLint("LogNotTimber")
+    private inner class ActivityLifecycle: ActivityLifecycleCallbacks {
+        override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {}
+
+        override fun onActivityStarted(activity: Activity) {
+            Log.e("ProcessLifecycle", "onActivityStarted: $activity")
+
+            if (nForeActivity++ == 0) {
+                delayJob?.cancel()
+                if (activity !is AdActivity
+                    && activity !is LoadingActivity) {
+                    if (bHotLoading) {
+                        bHotLoading = false
+                        LoadingActivity.restart(activity)
+                        needFreshNav = false
+                    }
+                }
+            }
+        }
+
+        override fun onActivityResumed(activity: Activity) { }
+
+        override fun onActivityPaused(activity: Activity) {}
+
+        override fun onActivityStopped(activity: Activity) {
+            Log.i("ProcessLifecycle", "onActivityStopped: $activity")
+            --nForeActivity
+            if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
+                delayJob = GlobalScope.launch {
+                    delay(2990L)
+                    if (activity.isFinishing || activity.isDestroyed) return@launch
+                    //if (!atomicBackHome.get()) return@launch
+                    Log.e("ProcessLifecycle", "finish: $activity")
+                    activity.finish()
+                }
+            }
+        }
+
+        override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {}
+
+        override fun onActivityDestroyed(activity: Activity) {
+            Log.i("ProcessLifecycle", "onActivityDestroyed: $activity")
+        }
+    }
 
     //翻译的源语言码
     var sourceLa: String

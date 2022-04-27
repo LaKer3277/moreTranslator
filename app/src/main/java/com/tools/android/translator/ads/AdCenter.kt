@@ -1,6 +1,7 @@
 package com.tools.android.translator.ads
 
 import android.content.Context
+import com.tools.android.translator.App
 import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.support.RemoteConfig
 import kotlinx.coroutines.CoroutineScope
@@ -13,7 +14,7 @@ import org.json.JSONObject
  * Created on 2022/4/26
  * Describe:
  */
-object AdCenter: CoroutineScope by MainScope() {
+object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     private val cacheAds = HashMap<String, Ad>()
 
@@ -30,6 +31,15 @@ object AdCenter: CoroutineScope by MainScope() {
     @Synchronized
     fun hasCached(adPos: AdPos): Boolean {
         return cacheAds.containsKey(adPos.pos)
+    }
+
+    fun preloadAd(adPos: AdPos) {
+        if (hasCached(adPos)) return
+        loadAd(App.ins, adPos, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                add2cache(adPos, ad)
+            }
+        })
     }
 
     fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false) {
@@ -54,7 +64,7 @@ object AdCenter: CoroutineScope by MainScope() {
         }
         val lists = arrayListOf<ConfigId>()
         lists.addAll(configPos.ids)
-        launch { traversalId(ctx, adPos, lists, adsListener) }
+        launch { traversalId(ctx.applicationContext, adPos, lists, adsListener) }
     }
 
     private fun traversalId(ctx: Context, adPos: AdPos, configIds: ArrayList<ConfigId>, adsListener: AdsListener) {
@@ -63,13 +73,27 @@ object AdCenter: CoroutineScope by MainScope() {
             return
         }
 
+        fun checkIt(ad: Ad?) {
+            if (ad != null) {
+                adsListener.onAdLoaded(ad)
+                return
+            }
+            traversalId(ctx, adPos, configIds, adsListener)
+        }
+
         val removeAt = configIds.removeAt(0)
         when (removeAt.type) {
-            "o" -> {}
+            "o" -> loadOpen(ctx, adPos, removeAt) {
+                checkIt(it)
+            }
 
-            "i" -> {}
+            "i" -> loadInterstitial(ctx, adPos, removeAt) {
+                checkIt(it)
+            }
 
-            "n" -> {}
+            "n" -> loadNative(ctx, adPos, removeAt) {
+                checkIt(it)
+            }
 
             else -> traversalId(ctx, adPos, configIds, adsListener)
         }
@@ -80,7 +104,7 @@ object AdCenter: CoroutineScope by MainScope() {
     private var dailyClickUpper = 8
 
     @Synchronized
-    fun tryParseConfig() {
+    private fun tryParseConfig() {
         val remoteAdConfig = RemoteConfig.ins.getAdsConfig()
 
         fun parsePosition(adPos: AdPos, jsonArray: JSONArray?) {

@@ -2,12 +2,22 @@ package com.tools.android.translator.ui
 
 import android.animation.Animator
 import android.animation.ValueAnimator
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import androidx.lifecycle.lifecycleScope
+import com.tools.android.translator.App
+import com.tools.android.translator.ads.AdCenter
+import com.tools.android.translator.ads.AdPos
+import com.tools.android.translator.ads.AdsListener
+import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.base.AnimatorListener
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityLoadingBinding
 import com.tools.android.translator.ui.translate.MainActivity
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Created on 2022/4/20
@@ -19,10 +29,45 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
         return ActivityLoadingBinding.inflate(layoutInflater)
     }
 
+    private var isAdImpression = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        runLoading(2000L) {
+        runLoading(10_000L) {
+            if (isAdImpression) return@runLoading
             if (isPaused()) return@runLoading
+            enterMain()
+        }
+        isAdImpression = false
+        lifecycleScope.launch {
+            AdCenter.preloadAd(AdPos.MAIN)
+            AdCenter.preloadAd(AdPos.TRANS)
+
+            delay(880L)
+            AdCenter.loadAd(this@LoadingActivity, AdPos.OPEN, listener)
+        }
+    }
+
+    private val listener = object :AdsListener() {
+        override fun onAdLoaded(ad: Ad) {
+            if (isPaused()) {
+                AdCenter.add2cache(AdPos.OPEN, ad)
+                return
+            }
+            if (ad is InterstitialAds) {
+                ad.show(this@LoadingActivity)
+            }
+        }
+
+        override fun onAdError(err: String?) {
+            if (isPaused()) finish() else enterMain()
+        }
+
+        override fun onAdShown() {
+            isAdImpression = true
+        }
+
+        override fun onAdDismiss() {
+            if (!App.ins.isAppForeground()) return
             enterMain()
         }
     }
@@ -64,5 +109,13 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
             }
         })
         valueAni?.start()
+    }
+
+    companion object {
+        fun restart(activity: Activity) {
+            val intent = Intent(activity, LoadingActivity::class.java)
+            intent.putExtra("restart", true)
+            activity.startActivity(intent)
+        }
     }
 }

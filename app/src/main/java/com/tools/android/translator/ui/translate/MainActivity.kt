@@ -11,8 +11,14 @@ import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.tools.android.translator.App
 import com.tools.android.translator.R
+import com.tools.android.translator.ads.AdCenter
+import com.tools.android.translator.ads.AdPos
+import com.tools.android.translator.ads.AdsListener
+import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.ads.body.NativeAds
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityMainBinding
 import com.tools.android.translator.translate.Language
@@ -21,6 +27,8 @@ import com.tools.android.translator.ui.CameraActivity
 import com.tools.android.translator.ui.SettingsActivity
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.adapt.LanguageAdapter.Companion.isCurrentSource
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
 
@@ -52,6 +60,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         freshLangUI()
+        delayNativeShow()
     }
 
     override fun onBackPressed() {
@@ -245,5 +254,48 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) return true
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
         return false
+    }
+
+    private fun delayNativeShow() {
+        lifecycleScope.launch {
+            delay(100L)
+            if (isPaused()) return@launch
+
+            if (needFreshNav) {
+                needFreshNav = false
+
+                requestAndLoad()
+            }
+        }
+    }
+
+    private var lastNative: NativeAds? = null
+    private fun requestAndLoad() {
+        AdCenter.loadAd(this, AdPos.MAIN, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                if (isPaused()) {
+                    AdCenter.add2cache(AdPos.MAIN, ad)
+                    return
+                }
+                if (ad !is NativeAds) return
+
+                lastNative?.onDestroy()
+                lastNative = ad
+
+                binding.imgHolder.visibility = View.GONE
+                binding.nativeAd.apply {
+                    root.visibility = View.VISIBLE
+                    ad.showTitle(root, this.adTitle)
+                    ad.showBody(root, this.adDesc)
+                    ad.showIcon(root, this.adIcon)
+                    ad.showCta(root, this.adAction)
+                    ad.register(root)
+                }
+            }
+        })
+    }
+
+    companion object {
+        var needFreshNav = true
     }
 }
