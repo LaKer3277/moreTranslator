@@ -18,6 +18,7 @@ import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.ads.AdPos
 import com.tools.android.translator.ads.AdsListener
 import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.ads.body.NativeAds
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityMainBinding
@@ -127,7 +128,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.tvTranslate.setOnClickListener {
             if (isTranslating) return@setOnClickListener
             isTranslating = true
-            mTrModel.sourceText.postValue(binding.etSource.text.toString())
+            showLoading(true)
+            lifecycleScope.launch {
+                //展示loading 过程
+                delay(500L)
+                mTrModel.sourceText.postValue(binding.etSource.text.toString())
+            }
         }
 
         binding.languagePanel.root.setChoiceListener(object :LanguageAdapter.ILangChoice{
@@ -172,7 +178,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
             this,
             { resultOrError ->
                 isTranslating = false
-                if (resultOrError.error != null) {
+                showLoading(false)
+                showInterstitial {if (resultOrError.error != null) {
                     //srcTextView.setError(resultOrError.error!!.localizedMessage)
                 } else {
                     if (resultOrError.result.isNullOrEmpty()) {
@@ -182,6 +189,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                     binding.groupTranslate.visibility = View.GONE
                     binding.tvResult.text = resultOrError.result
+                }
                 }
             }
         )
@@ -257,6 +265,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun delayNativeShow() {
+        AdCenter.preloadAd(AdPos.TRANS)
         lifecycleScope.launch {
             delay(100L)
             if (isPaused()) return@launch
@@ -293,6 +302,31 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                 }
             }
         })
+    }
+
+    private fun showInterstitial(action: () -> Unit) {
+        AdCenter.loadAd(this, AdPos.TRANS, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                action.invoke()
+                if (ad !is InterstitialAds) {
+                    return
+                }
+                ad.show(this@MainActivity)
+            }
+
+            override fun onAdError(err: String?) {
+                action.invoke()
+            }
+        }, justCache = true)
+    }
+
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.layoutLoading.visibility = View.VISIBLE
+            binding.progressBar.show()
+        } else {
+            binding.layoutLoading.visibility = View.GONE
+        }
     }
 
     companion object {

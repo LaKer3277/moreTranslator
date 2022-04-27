@@ -17,6 +17,15 @@ import org.json.JSONObject
 object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     private val cacheAds = HashMap<String, Ad>()
+    private val isRequesting = HashMap<String, String>()
+
+    private fun resetRequesting(adPos: AdPos, add: Boolean) {
+        if (add) {
+            isRequesting[adPos.pos] = "yes"
+        } else {
+            isRequesting.remove(adPos.pos)
+        }
+    }
 
     @Synchronized
     fun getCache(adPos: AdPos): Ad? {
@@ -39,10 +48,10 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             override fun onAdLoaded(ad: Ad) {
                 add2cache(adPos, ad)
             }
-        })
+        }, forceLoad = false)
     }
 
-    fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false) {
+    fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false, forceLoad: Boolean = true) {
         val cache = getCache(adPos)
         if (cache != null) {
             cache.resetListener(adsListener)
@@ -53,6 +62,12 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             adsListener.onAdError("noCache")
             return
         }
+        if (!forceLoad) {
+            synchronized(isRequesting) {
+                if (!isRequesting[adPos.pos].isNullOrEmpty()) return
+            }
+        }
+
         var configPos = adsConfig[adPos.pos]
         if (configPos == null || configPos.isEmpty()) {
             tryParseConfig()
@@ -64,11 +79,14 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
         }
         val lists = arrayListOf<ConfigId>()
         lists.addAll(configPos.ids)
+
+        resetRequesting(adPos, true)
         launch { traversalId(ctx.applicationContext, adPos, lists, adsListener) }
     }
 
     private fun traversalId(ctx: Context, adPos: AdPos, configIds: ArrayList<ConfigId>, adsListener: AdsListener) {
         if (configIds.isNullOrEmpty()) {
+            resetRequesting(adPos, false)
             adsListener.onAdError("Request All Done")
             return
         }
@@ -76,6 +94,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
         fun checkIt(ad: Ad?) {
             if (ad != null) {
                 adsListener.onAdLoaded(ad)
+                resetRequesting(adPos, false)
                 return
             }
             traversalId(ctx, adPos, configIds, adsListener)
