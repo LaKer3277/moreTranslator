@@ -54,7 +54,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
     fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false, forceLoad: Boolean = true) {
         val cache = getCache(adPos)
         if (cache != null) {
-            cache.resetListener(adsListener)
+            cache.defineListener(adsListener)
             adsListener.onAdLoaded(cache)
             return
         }
@@ -93,6 +93,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
         fun checkIt(ad: Ad?) {
             if (ad != null) {
+                ad.defineListener(adsListener)
                 adsListener.onAdLoaded(ad)
                 resetRequesting(adPos, false)
                 return

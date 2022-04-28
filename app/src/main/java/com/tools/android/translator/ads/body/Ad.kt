@@ -16,7 +16,7 @@ abstract class Ad(val adPos: AdPos, val configId: ConfigId) {
 
     abstract fun buildInAd(ad: Any)
 
-    fun resetListener(adsListener: AdsListener) {
+    fun defineListener(adsListener: AdsListener) {
         actShown = { adsListener.onAdShown() }
         actClick = { adsListener.onAdClick() }
         actDismiss = { adsListener.onAdDismiss() }
