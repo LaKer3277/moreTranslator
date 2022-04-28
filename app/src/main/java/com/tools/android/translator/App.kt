@@ -9,9 +9,10 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
-import com.tools.android.translator.support.RemoteConfig
+import com.tools.android.translator.support.Devices
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
+import com.tools.android.translator.upload.Uploader
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,6 +38,7 @@ class App: Application() {
         MobileAds.initialize(this)
         //RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())
+        Uploader.ins.doStart()
     }
 
     //存在的前台Activity 数量
@@ -132,5 +134,32 @@ class App: Application() {
         }
         set(value) {
             sp.edit().putString("source_history", value).apply()
+        }
+
+    val deviceId: String
+        get() {
+            val deviceIdKey = "device_id_n"
+            var device = sp.getString(deviceIdKey, "")
+            if (device.isNullOrEmpty()) {
+                device = Devices.deviceId()
+                sp.edit().putString(deviceIdKey, device).apply()
+            }
+            return device ?: ""
+        }
+
+    var localUserIp: String
+        get() {
+            return sp.getString("user_local_ip", "") ?: ""
+        }
+        set(value) {
+            sp.edit().putString("user_local_ip", value).apply()
+        }
+
+    var firstCountry: String
+        get() {
+            return sp.getString("first_country", "") ?: ""
+        }
+        set(value) {
+            sp.edit().putString("first_country", value).apply()
         }
 }
