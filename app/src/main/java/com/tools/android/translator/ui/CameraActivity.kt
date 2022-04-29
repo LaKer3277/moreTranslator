@@ -35,20 +35,23 @@ import com.tools.android.translator.translate.Language
 import com.tools.android.translator.translate.languageList
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.translate.TranslateViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.util.Size
+import com.tools.android.translator.ads.AdCenter
+import com.tools.android.translator.ads.AdPos
+import com.tools.android.translator.ads.AdsListener
+import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.support.BitmapUtils
+import kotlinx.coroutines.*
 
 /**
  * Created on 2022/4/22
  * Describe:
  */
-class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClickListener {
+class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClickListener, CoroutineScope by MainScope() {
 
     override fun obtainBinding(): ActivityCameraBinding {
         return ActivityCameraBinding.inflate(layoutInflater)
@@ -100,6 +103,11 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         initLanguageViews()
     }
 
+    override fun onResume() {
+        super.onResume()
+        AdCenter.preloadAd(AdPos.TRANS)
+    }
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_text, R.id.tv_text -> finish()
@@ -111,7 +119,10 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
 
             R.id.camera1 -> takePhoto()
 
-            R.id.iv_album -> choosePicture.launch(null)
+            R.id.iv_album -> {
+                App.ins.blockOnceHot()
+                choosePicture.launch(null)
+            }
 
             R.id.iv_close -> cancelRecognize()
 
@@ -391,17 +402,32 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
-                binding.layoutLoading.visibility = View.GONE
-                isTranslating = false
-                if (resultOrError.error != null) {
-                    //srcTextView.setError(resultOrError.error!!.localizedMessage)
-                } else {
-                    if (resultOrError.result.isNullOrEmpty()) {
-                        binding.groupResult.visibility = View.GONE
+
+                val showTxtAction = {
+                    if (resultOrError.error != null) {
+                        //srcTextView.setError(resultOrError.error!!.localizedMessage)
                     } else {
-                        binding.groupResult.visibility = View.VISIBLE
+                        if (resultOrError.result.isNullOrEmpty()) {
+                            binding.groupResult.visibility = View.GONE
+                        } else {
+                            binding.groupResult.visibility = View.VISIBLE
+                        }
+                        binding.resultTv.text = resultOrError.result
                     }
-                    binding.resultTv.text = resultOrError.result
+                }
+
+                launch {
+                    delay(50L)
+                    binding.layoutLoading.visibility = View.GONE
+                    if (isTranslating && !App.ins.isAtomicStarting.get()) {
+                        showInterstitial {
+                            showTxtAction.invoke()
+                        }
+                    } else {
+                        showTxtAction.invoke()
+                    }
+                    isTranslating = false
+                    App.ins.isAtomicStarting.set(false)
                 }
             }
         )
@@ -442,5 +468,21 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         mTrModel.targetLang.value?.apply {
             binding.tvLaTarget.text = displayName
         }
+    }
+
+    private fun showInterstitial(action: () -> Unit) {
+        AdCenter.loadAd(this, AdPos.TRANS, object : AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                action.invoke()
+                if (ad !is InterstitialAds) {
+                    return
+                }
+                ad.show(this@CameraActivity)
+            }
+
+            override fun onAdError(err: String?) {
+                action.invoke()
+            }
+        }, justCache = true)
     }
 }

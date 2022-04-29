@@ -7,12 +7,20 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.tools.android.translator.App
 import com.tools.android.translator.R
+import com.tools.android.translator.ads.AdCenter
+import com.tools.android.translator.ads.AdPos
+import com.tools.android.translator.ads.AdsListener
+import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.ads.body.InterstitialAds
+import com.tools.android.translator.ads.body.NativeAds
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityMainBinding
 import com.tools.android.translator.translate.Language
@@ -21,8 +29,12 @@ import com.tools.android.translator.ui.CameraActivity
 import com.tools.android.translator.ui.SettingsActivity
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.adapt.LanguageAdapter.Companion.isCurrentSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
-class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener, CoroutineScope by MainScope() {
 
     override fun obtainBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -49,9 +61,11 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onResume() {
         super.onResume()
+        mTrModel.fetchDownloadedModels()
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         freshLangUI()
+        delayNativeShow()
     }
 
     override fun onBackPressed() {
@@ -95,6 +109,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private var isTranslating = false
     private var exchanging = false
     private fun initLanguageViews() {
+        binding.tvResult.isVerticalScrollBarEnabled = true
+        binding.tvResult.movementMethod = ScrollingMovementMethod.getInstance()
         binding.imgExchange.setOnClickListener {
             if (exchanging) return@setOnClickListener
             exchanging = true
@@ -118,7 +134,12 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.tvTranslate.setOnClickListener {
             if (isTranslating) return@setOnClickListener
             isTranslating = true
-            mTrModel.sourceText.postValue(binding.etSource.text.toString())
+            showLoading(true)
+            lifecycleScope.launch {
+                //展示loading 过程
+                delay(500L)
+                mTrModel.sourceText.postValue(binding.etSource.text.toString())
+            }
         }
 
         binding.languagePanel.root.setChoiceListener(object :LanguageAdapter.ILangChoice{
@@ -162,17 +183,33 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
-                isTranslating = false
-                if (resultOrError.error != null) {
-                    //srcTextView.setError(resultOrError.error!!.localizedMessage)
-                } else {
-                    if (resultOrError.result.isNullOrEmpty()) {
-                        binding.groupResult.visibility = View.GONE
+
+                val showTxt = {
+                    if (resultOrError.error != null) {
+                        //srcTextView.setError(resultOrError.error!!.localizedMessage)
                     } else {
-                        binding.groupResult.visibility = View.VISIBLE
+                        if (resultOrError.result.isNullOrEmpty()) {
+                            binding.groupResult.visibility = View.GONE
+                        } else {
+                            binding.groupResult.visibility = View.VISIBLE
+                        }
+                        binding.groupTranslate.visibility = View.GONE
+                        binding.tvResult.text = resultOrError.result
                     }
-                    binding.groupTranslate.visibility = View.GONE
-                    binding.tvResult.text = resultOrError.result
+                }
+
+                launch {
+                    delay(50L)
+                    showLoading(false)
+                    if (isTranslating && !App.ins.isAtomicStarting.get()) {
+                        showInterstitial {
+                            showTxt.invoke()
+                        }
+                    } else {
+                        showTxt.invoke()
+                    }
+                    App.ins.isAtomicStarting.set(false)
+                    isTranslating = false
                 }
             }
         )
@@ -245,5 +282,74 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) return true
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
         return false
+    }
+
+    private fun delayNativeShow() {
+        AdCenter.preloadAd(AdPos.TRANS)
+        lifecycleScope.launch {
+            delay(100L)
+            if (isPaused()) return@launch
+
+            if (needFreshNav) {
+                needFreshNav = false
+
+                requestAndLoad()
+            }
+        }
+    }
+
+    private var lastNative: NativeAds? = null
+    private fun requestAndLoad() {
+        AdCenter.loadAd(this, AdPos.MAIN, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                if (isPaused()) {
+                    AdCenter.add2cache(AdPos.MAIN, ad)
+                    return
+                }
+                if (ad !is NativeAds) return
+
+                lastNative?.onDestroy()
+                lastNative = ad
+
+                binding.imgHolder.visibility = View.GONE
+                binding.nativeAd.apply {
+                    root.visibility = View.VISIBLE
+                    ad.showTitle(root, this.adTitle)
+                    ad.showBody(root, this.adDesc)
+                    ad.showIcon(root, this.adIcon)
+                    ad.showCta(root, this.adAction)
+                    ad.register(root)
+                }
+            }
+        })
+    }
+
+    private fun showInterstitial(action: () -> Unit) {
+        AdCenter.loadAd(this, AdPos.TRANS, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                action.invoke()
+                if (ad !is InterstitialAds) {
+                    return
+                }
+                ad.show(this@MainActivity)
+            }
+
+            override fun onAdError(err: String?) {
+                action.invoke()
+            }
+        }, justCache = true)
+    }
+
+    private fun showLoading(show: Boolean) {
+        if (show) {
+            binding.layoutLoading.visibility = View.VISIBLE
+            binding.progressBar.show()
+        } else {
+            binding.layoutLoading.visibility = View.GONE
+        }
+    }
+
+    companion object {
+        var needFreshNav = true
     }
 }
