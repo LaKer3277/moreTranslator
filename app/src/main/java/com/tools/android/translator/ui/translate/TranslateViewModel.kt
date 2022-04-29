@@ -96,7 +96,7 @@ class TranslateViewModel(application: Application) : AndroidViewModel(applicatio
     }
 
     // Updates the list of downloaded models available for local translation.
-    private fun fetchDownloadedModels() {
+    fun fetchDownloadedModels() {
         modelManager.getDownloadedModels(TranslateRemoteModel::class.java)
             .addOnSuccessListener { remoteModels ->
                 availableModels.value = remoteModels.sortedBy { it.language }.map { it.language }

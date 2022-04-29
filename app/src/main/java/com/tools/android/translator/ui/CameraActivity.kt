@@ -35,9 +35,6 @@ import com.tools.android.translator.translate.Language
 import com.tools.android.translator.translate.languageList
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.translate.TranslateViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.io.File
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -48,12 +45,13 @@ import com.tools.android.translator.ads.AdsListener
 import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.support.BitmapUtils
+import kotlinx.coroutines.*
 
 /**
  * Created on 2022/4/22
  * Describe:
  */
-class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClickListener {
+class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClickListener, CoroutineScope by MainScope() {
 
     override fun obtainBinding(): ActivityCameraBinding {
         return ActivityCameraBinding.inflate(layoutInflater)
@@ -404,7 +402,6 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
-                binding.layoutLoading.visibility = View.GONE
 
                 val showTxtAction = {
                     if (resultOrError.error != null) {
@@ -419,13 +416,18 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                     }
                 }
 
-                if (isTranslating) {
-                    isTranslating = false
-                    showInterstitial {
+                launch {
+                    delay(50L)
+                    binding.layoutLoading.visibility = View.GONE
+                    if (isTranslating && !App.ins.isAtomicStarting.get()) {
+                        showInterstitial {
+                            showTxtAction.invoke()
+                        }
+                    } else {
                         showTxtAction.invoke()
                     }
-                } else {
-                    showTxtAction.invoke()
+                    isTranslating = false
+                    App.ins.isAtomicStarting.set(false)
                 }
             }
         )

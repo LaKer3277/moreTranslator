@@ -18,6 +18,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.concurrent.atomic.AtomicBoolean
 
 /**
  * Created on 2022/4/20
@@ -30,6 +31,7 @@ class App: Application() {
         const val isRelease = false
     }
 
+    val isAtomicStarting = AtomicBoolean(false)
     private lateinit var sp: SharedPreferences
     override fun onCreate() {
         super.onCreate()
@@ -70,8 +72,9 @@ class App: Application() {
                 if (activity !is AdActivity
                     && activity !is LoadingActivity) {
                     if (!blockHot && bHotLoading) {
+                        isAtomicStarting.set(true)
                         LoadingActivity.restart(activity)
-                        needFreshNav = false
+                        needFreshNav = true
                     }
                     blockHot = false
                     bHotLoading = false
@@ -91,6 +94,7 @@ class App: Application() {
                 bHotLoading = true
                 if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
                     if (activity.isFinishing || activity.isDestroyed) return@launch
+                    if (isAppForeground()) return@launch
                     //if (!atomicBackHome.get()) return@launch
                     Log.e("ProcessLifecycle", "finish: $activity")
                     activity.finish()

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.text.method.ScrollingMovementMethod
 import android.view.View
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -28,10 +29,12 @@ import com.tools.android.translator.ui.CameraActivity
 import com.tools.android.translator.ui.SettingsActivity
 import com.tools.android.translator.ui.adapt.LanguageAdapter
 import com.tools.android.translator.ui.adapt.LanguageAdapter.Companion.isCurrentSource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener {
+class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickListener, CoroutineScope by MainScope() {
 
     override fun obtainBinding(): ActivityMainBinding {
         return ActivityMainBinding.inflate(layoutInflater)
@@ -58,6 +61,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
 
     override fun onResume() {
         super.onResume()
+        mTrModel.fetchDownloadedModels()
         mTrModel.sourceLang.value = LanguageAdapter.sourceLa
         mTrModel.targetLang.value = LanguageAdapter.targetLa
         freshLangUI()
@@ -105,6 +109,8 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     private var isTranslating = false
     private var exchanging = false
     private fun initLanguageViews() {
+        binding.tvResult.isVerticalScrollBarEnabled = true
+        binding.tvResult.movementMethod = ScrollingMovementMethod.getInstance()
         binding.imgExchange.setOnClickListener {
             if (exchanging) return@setOnClickListener
             exchanging = true
@@ -177,7 +183,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         mTrModel.translatedText.observe(
             this,
             { resultOrError ->
-                showLoading(false)
 
                 val showTxt = {
                     if (resultOrError.error != null) {
@@ -193,13 +198,18 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
                     }
                 }
 
-                if (isTranslating) {
-                    isTranslating = false
-                    showInterstitial {
+                launch {
+                    delay(50L)
+                    showLoading(false)
+                    if (isTranslating && !App.ins.isAtomicStarting.get()) {
+                        showInterstitial {
+                            showTxt.invoke()
+                        }
+                    } else {
                         showTxt.invoke()
                     }
-                } else {
-                    showTxt.invoke()
+                    App.ins.isAtomicStarting.set(false)
+                    isTranslating = false
                 }
             }
         )
