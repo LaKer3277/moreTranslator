@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
+import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.support.Devices
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
@@ -39,6 +40,7 @@ class App: Application() {
         //RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())
         Uploader.ins.doStart()
+        AdConfig.ins.checkFirst()
     }
 
     //存在的前台Activity 数量
@@ -84,9 +86,10 @@ class App: Application() {
         override fun onActivityStopped(activity: Activity) {
             Log.i("ProcessLifecycle", "onActivityStopped: $activity")
             --nForeActivity
-            if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
-                delayJob = GlobalScope.launch {
-                    delay(2990L)
+            delayJob = GlobalScope.launch {
+                delay(2990L)
+                bHotLoading = true
+                if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
                     if (activity.isFinishing || activity.isDestroyed) return@launch
                     //if (!atomicBackHome.get()) return@launch
                     Log.e("ProcessLifecycle", "finish: $activity")

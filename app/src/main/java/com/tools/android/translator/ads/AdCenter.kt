@@ -1,6 +1,7 @@
 package com.tools.android.translator.ads
 
 import android.content.Context
+import android.util.Log
 import com.tools.android.translator.App
 import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.support.RemoteConfig
@@ -16,6 +17,7 @@ import org.json.JSONObject
  */
 object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
+    private const val tag = "AdCenter"
     private val cacheAds = HashMap<String, Ad>()
     private val isRequesting = HashMap<String, String>()
 
@@ -44,6 +46,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     fun preloadAd(adPos: AdPos) {
         if (hasCached(adPos)) return
+        Log.i(tag, "preload: ${adPos.pos}")
         loadAd(App.ins, adPos, object :AdsListener() {
             override fun onAdLoaded(ad: Ad) {
                 add2cache(adPos, ad)
@@ -52,6 +55,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
     }
 
     fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false, forceLoad: Boolean = true) {
+        Log.i(tag, "load: ${adPos.pos}")
         val cache = getCache(adPos)
         if (cache != null) {
             cache.defineListener(adsListener)
@@ -62,6 +66,13 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             adsListener.onAdError("noCache")
             return
         }
+
+        if ((dailyClickUpper > 0 && AdConfig.ins.getClickCount() > dailyClickUpper)
+            || dailyShownUpper > 0 && AdConfig.ins.getShownCount() > dailyShownUpper) {
+            adsListener.onAdError("hasLimited")
+            return
+        }
+
         if (!forceLoad) {
             synchronized(isRequesting) {
                 if (!isRequesting[adPos.pos].isNullOrEmpty()) return
@@ -102,6 +113,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
         }
 
         val removeAt = configIds.removeAt(0)
+        Log.i(tag, "requesting ad: ${adPos.pos} - ${removeAt.id}")
         when (removeAt.type) {
             "o" -> loadOpen(ctx, adPos, removeAt) {
                 checkIt(it)
