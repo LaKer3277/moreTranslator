@@ -1,5 +1,7 @@
 package com.tools.android.translator.support
 
+import com.google.firebase.remoteconfig.FirebaseRemoteConfig
+import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.tools.android.translator.App
 
 /**
@@ -12,7 +14,7 @@ class RemoteConfig {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
     }
 
-    /*private val remoteConfig = Firebase.remoteConfig
+    private val remoteConfig = FirebaseRemoteConfig.getInstance()
     init {
         if (!App.isRelease) {
             //如果是调试，启用开发者模式，以便可以频繁刷新缓存
@@ -32,13 +34,13 @@ class RemoteConfig {
             .addOnCompleteListener {
                 if (it.isSuccessful) action()
             }
-    }*/
+    }
 
     fun getAdsConfig(): String {
-        /*var config: String? = remoteConfig.getString("")
+        val config: String = remoteConfig.getString("iTranslator_configuration") ?: ""
         if (config.isNullOrEmpty()) {
             return adLocal
-        }*/
+        }
         return adLocal
     }
 
@@ -48,36 +50,40 @@ class RemoteConfig {
             "    \"iTran_sykp\":[\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/2767361425\",\n" +
             "            \"odkg\":\"o\",\n" +
             "            \"nbm\":3\n" +
             "        },\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/9001597284\",\n" +
             "            \"odkg\":\"o\",\n" +
             "            \"nbm\":2\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/7496943929\",\n" +
+            "            \"odkg\":\"o\",\n" +
+            "            \"nbm\":1\n" +
             "        }\n" +
             "    ],\n" +
             "    \"iTran_syys\":[\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/1344816156\",\n" +
             "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_tr\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
             "            \"nbm\":3\n" +
             "        },\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/1669902174\",\n" +
+            "            \"odkg\":\"n\",\n" +
+            "            \"nbm\":2\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-2201554157805547/4104493828\",\n" +
+            "            \"odkg\":\"n\",\n" +
             "            \"nbm\":1\n" +
             "        }\n" +
             "    ]\n" +

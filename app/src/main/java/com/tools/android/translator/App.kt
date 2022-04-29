@@ -11,6 +11,7 @@ import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
 import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.support.Devices
+import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
 import com.tools.android.translator.upload.Uploader
@@ -28,7 +29,7 @@ class App: Application() {
 
     companion object {
         lateinit var ins: App
-        const val isRelease = false
+        const val isRelease = true
     }
 
     val isAtomicStarting = AtomicBoolean(false)
@@ -39,7 +40,7 @@ class App: Application() {
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 
         MobileAds.initialize(this)
-        //RemoteConfig.ins.init()
+        RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())
         Uploader.ins.doStart()
         AdConfig.ins.checkFirst()

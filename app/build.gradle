@@ -52,6 +52,7 @@ dependencies {
     // Declare the dependency for the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-config'
 
     implementation 'com.google.mlkit:camera:16.0.0-beta3'
     implementation 'com.google.mlkit:translate:17.0.0'
