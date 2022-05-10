@@ -145,9 +145,9 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             for (i in 0 until jsonArray.length()) {
                 val json = jsonArray.optJSONObject(i) ?: continue
                 listIds.add(ConfigId(
-                    id = json.optString("ltof"),
-                    type = json.optString("odkg"),
-                    priority = json.optInt("nbm")
+                    id = json.optString("xmcd"),
+                    type = json.optString("xmco"),
+                    priority = json.optInt("xmcn")
                 ))
             }
             listIds.sortBy { it.priority * -1 }
