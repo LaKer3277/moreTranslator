@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.FirebaseApp
 import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.support.Devices
 import com.tools.android.translator.support.RemoteConfig
@@ -36,6 +37,9 @@ class App: Application() {
     private lateinit var sp: SharedPreferences
     override fun onCreate() {
         super.onCreate()
+        try {
+            FirebaseApp.initializeApp(this)
+        } catch (e: Exception) {}
         ins = this
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 

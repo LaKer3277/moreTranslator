@@ -1,5 +1,6 @@
 package com.tools.android.translator.support
 
+import android.widget.Toast
 import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.FirebaseRemoteConfigSettings
 import com.tools.android.translator.App
@@ -41,6 +42,7 @@ class RemoteConfig {
         if (config.isNullOrEmpty()) {
             return adLocal
         }
+        //Toast.makeText(App.ins, config, Toast.LENGTH_LONG).show()
         return adLocal
     }
 
