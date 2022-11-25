@@ -1,17 +1,19 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
 }
 
 android {
     compileSdk 31
 
     defaultConfig {
-        applicationId "com.tools.android.translator"
+        applicationId "com.iTranslator.instanttool"
         minSdk 23
         targetSdk 31
-        versionCode 101
-        versionName "1.0.1"
+        versionCode 104
+        versionName "1.0.4"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -79,4 +81,5 @@ dependencies {
     implementation("com.google.firebase:firebase-config-ktx")
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
+
 }

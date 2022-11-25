@@ -11,6 +11,8 @@ import android.util.Log
 import com.github.shadowsocks.Core
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.ktx.initialize
 import com.tencent.mmkv.MMKV
 import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.support.Devices
@@ -48,6 +50,7 @@ class App: Application() {
         MMKV.initialize(this)
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 
+        Firebase.initialize(this)
         MobileAds.initialize(this)
         RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())

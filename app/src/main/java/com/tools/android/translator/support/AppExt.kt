@@ -26,7 +26,7 @@ fun getServerLogo(serverBean: ServerBean):Int{
         "Japan"-> R.mipmap.japan
         "KoreaSouth"-> R.mipmap.koreasouth
         "Netherlands"-> R.mipmap.netherlands
-        "New Zealand"-> R.mipmap.newzealand
+        "NewZealand"-> R.mipmap.newzealand
         "Norway"-> R.mipmap.norway
         "Russian"-> R.mipmap.russianfederation
         "Singapore"-> R.mipmap.singapore
