@@ -64,42 +64,6 @@
         app:layout_constraintTop_toBottomOf="@id/tv_privacy"
         tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/edit_popup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="itrPopShow"
-        android:layout_marginTop="20dp"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/tv_feedback"/>
-    <EditText
-        android:id="@+id/edit_itr_v"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="itr_v"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_popup"/>
-    <EditText
-        android:id="@+id/edit_referrer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="referrer"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
-        android:layout_marginTop="20dp"
-        app:layout_constraintTop_toBottomOf="@id/edit_itr_v"/>
-    <Button
-        android:id="@+id/save"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="保存"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/edit_referrer"/>
-
     <include
         android:id="@+id/include_nav"
         layout="@layout/include_navigate"

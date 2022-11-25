@@ -404,17 +404,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun checkCanShowGuideDialog(){
-        val editPopup=MMKV.defaultMMKV().decodeString("editPopup")?:""
-        val editItrV=MMKV.defaultMMKV().decodeString("editItrV")?:""
-        if(editPopup.isNotEmpty()){
-            RemoteConfig.ins.itrPopShow=editPopup
-        }
-        if(editItrV.isNotEmpty()){
-            RemoteConfig.ins.itrV=editItrV
-        }
-
-
-
         if(showingLimitDialog){
             return
         }
@@ -455,7 +444,6 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     }
 
     private fun readReferrer(callback:(referrer:String)->Unit){
-//        callback.invoke("ffffffb4a")
 
         val decodeString = MMKV.defaultMMKV().decodeString("referrer", "")?:""
         if(decodeString.isEmpty()){

@@ -36,16 +36,6 @@ class SettingsActivity: BaseBindingActivity<ActivitySettingsBinding>(), View.OnC
             tvCamera.setOnClickListener(this@SettingsActivity)
             serverLayout.setOnClickListener(this@SettingsActivity)
         }
-
-
-        binding.save.setOnClickListener {
-            val editPopup = binding.editPopup.text.toString()
-            val editItrV = binding.editItrV.text.toString()
-            val editReferrer = binding.editReferrer.text.toString()
-            MMKV.defaultMMKV().encode("editPopup",editPopup)
-            MMKV.defaultMMKV().encode("editItrV",editItrV)
-            MMKV.defaultMMKV().encode("referrer",editReferrer)
-        }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
