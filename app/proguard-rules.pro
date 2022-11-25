@@ -38,10 +38,10 @@
 -keep interface * extends java.lang.annotation.Annotation { *; }
 
 
--assumenosideeffects class android.util.Log{
-    public static *** d(...);
-    public static *** i(...);
-    public static *** e(...);
-    public static *** w(...);
-    public static *** v(...);
-}
+#-assumenosideeffects class android.util.Log{
+#    public static *** d(...);
+#    public static *** i(...);
+#    public static *** e(...);
+#    public static *** w(...);
+#    public static *** v(...);
+#}

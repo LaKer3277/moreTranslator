@@ -45,6 +45,8 @@ import com.tools.android.translator.ads.AdsListener
 import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.support.BitmapUtils
+import com.tools.android.translator.support.setPoint
+import com.tools.android.translator.ui.server.ConnectServerActivity
 import kotlinx.coroutines.*
 
 /**
@@ -85,6 +87,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             tvText.setOnClickListener(this@CameraActivity)
             ivSetting.setOnClickListener(this@CameraActivity)
             tvSetting.setOnClickListener(this@CameraActivity)
+            serverLayout.setOnClickListener(this@CameraActivity)
         }
         mPreviewView = binding.previewView
         mPreviewView.post {
@@ -111,6 +114,11 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.iv_text, R.id.tv_text -> finish()
+            R.id.server_layout->{
+                setPoint.point("itr_vpn_click")
+                startActivity(Intent(this, ConnectServerActivity::class.java))
+                finish()
+            }
 
             R.id.iv_setting, R.id.tv_setting -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
@@ -326,7 +334,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
         Bitmap.createBitmap(origin, 0, 0, width, height, matrix, false)
     }
 
-    class ChoosePicture : ActivityResultContract<Void?, Uri>() {
+    class ChoosePicture : ActivityResultContract<Void?, Uri?>() {
         override fun createIntent(context: Context, input: Void?): Intent {
             var intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
             if (context.packageManager.resolveActivity(intent, 0) == null) {

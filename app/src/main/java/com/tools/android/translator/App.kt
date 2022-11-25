@@ -2,16 +2,21 @@ package com.tools.android.translator
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.Application
 import android.content.Context
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
+import com.github.shadowsocks.Core
 import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
+import com.tencent.mmkv.MMKV
 import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.support.Devices
+import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.ui.LoadingActivity
+import com.tools.android.translator.ui.translate.MainActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
 import com.tools.android.translator.upload.Uploader
 import kotlinx.coroutines.GlobalScope
@@ -36,14 +41,32 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         ins = this
+        Core.init(this,MainActivity::class)
+        if (!packageName.equals(processName(this))){
+            return
+        }
+        MMKV.initialize(this)
         sp = getSharedPreferences("iThan_config", Context.MODE_PRIVATE)
 
         MobileAds.initialize(this)
-        //RemoteConfig.ins.init()
+        RemoteConfig.ins.init()
         registerActivityLifecycleCallbacks(ActivityLifecycle())
         Uploader.ins.doStart()
         AdConfig.ins.checkFirst()
     }
+
+    private fun processName(applicationContext: Application): String {
+        val pid = android.os.Process.myPid()
+        var processName = ""
+        val manager = applicationContext.getSystemService(Application.ACTIVITY_SERVICE) as ActivityManager
+        for (process in manager.runningAppProcesses) {
+            if (process.pid === pid) {
+                processName = process.processName
+            }
+        }
+        return processName
+    }
+
 
     //存在的前台Activity 数量
     private var nForeActivity = 0
@@ -51,6 +74,8 @@ class App: Application() {
     private var bHotLoading = false
     //屏蔽本次热启动
     private var blockHot = false
+
+    var isHotLoad=false
 
     fun blockOnceHot() {
         blockHot = true
@@ -66,15 +91,16 @@ class App: Application() {
 
         override fun onActivityStarted(activity: Activity) {
             Log.e("ProcessLifecycle", "onActivityStarted: $activity")
-
-            if (nForeActivity++ == 0) {
-                delayJob?.cancel()
+            nForeActivity++
+            delayJob?.cancel()
+            if ( nForeActivity== 1) {
                 if (activity !is AdActivity
                     && activity !is LoadingActivity) {
                     if (!blockHot && bHotLoading) {
                         isAtomicStarting.set(true)
                         LoadingActivity.restart(activity)
                         needFreshNav = true
+                        isHotLoad=true
                     }
                     blockHot = false
                     bHotLoading = false
@@ -89,15 +115,17 @@ class App: Application() {
         override fun onActivityStopped(activity: Activity) {
             Log.i("ProcessLifecycle", "onActivityStopped: $activity")
             --nForeActivity
-            delayJob = GlobalScope.launch {
-                delay(2990L)
-                bHotLoading = true
-                if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
-                    if (activity.isFinishing || activity.isDestroyed) return@launch
-                    if (isAppForeground()) return@launch
-                    //if (!atomicBackHome.get()) return@launch
-                    Log.e("ProcessLifecycle", "finish: $activity")
-                    activity.finish()
+            if (nForeActivity<=0){
+                delayJob = GlobalScope.launch {
+                    delay(2990L)
+                    bHotLoading = true
+                    if (activity is AdActivity || (activity is LoadingActivity && nForeActivity <= 0)) {
+                        if (activity.isFinishing || activity.isDestroyed) return@launch
+                        if (isAppForeground()) return@launch
+                        //if (!atomicBackHome.get()) return@launch
+                        Log.e("ProcessLifecycle", "finish: $activity")
+                        activity.finish()
+                    }
                 }
             }
         }

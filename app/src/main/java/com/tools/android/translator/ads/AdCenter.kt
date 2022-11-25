@@ -41,6 +41,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     @Synchronized
     fun hasCached(adPos: AdPos): Boolean {
+        Log.i(tag,"=hasCached=${cacheAds.containsKey(adPos.pos)}==")
         return cacheAds.containsKey(adPos.pos)
     }
 
@@ -120,6 +121,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             }
 
             "i" -> loadInterstitial(ctx, adPos, removeAt) {
+
                 checkIt(it)
             }
 
@@ -162,6 +164,12 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             parsePosition(AdPos.MAIN, jsonObject.optJSONArray(AdPos.MAIN.pos))
             parsePosition(AdPos.OPEN, jsonObject.optJSONArray(AdPos.OPEN.pos))
             parsePosition(AdPos.TRANS, jsonObject.optJSONArray(AdPos.TRANS.pos))
-        } catch (e: Exception) {}
+            parsePosition(AdPos.CONNECT, jsonObject.optJSONArray(AdPos.CONNECT.pos))
+            parsePosition(AdPos.RESULT, jsonObject.optJSONArray(AdPos.RESULT.pos))
+            parsePosition(AdPos.SERVER_HOME, jsonObject.optJSONArray(AdPos.SERVER_HOME.pos))
+            parsePosition(AdPos.BACK, jsonObject.optJSONArray(AdPos.BACK.pos))
+        } catch (e: Exception) {
+
+        }
     }
 }

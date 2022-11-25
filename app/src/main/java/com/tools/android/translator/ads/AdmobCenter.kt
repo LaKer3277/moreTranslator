@@ -1,6 +1,7 @@
 package com.tools.android.translator.ads
 
 import android.content.Context
+import android.util.Log
 import com.google.android.gms.ads.AdLoader
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.LoadAdError

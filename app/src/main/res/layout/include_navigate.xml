@@ -54,7 +54,31 @@
             android:textSize="10sp"
             tools:ignore="HardcodedText,SmallSp" />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/server_layout"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
+        <ImageView
+            android:id="@+id/iv_server"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/select_server" />
+
+        <TextView
+            android:id="@+id/tv_server"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_server"
+            android:gravity="center"
+            android:text="VPN"
+            android:textColor="#A5ABB3"
+            android:textSize="10sp"
+            tools:ignore="HardcodedText,SmallSp" />
+    </RelativeLayout>
     <RelativeLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"

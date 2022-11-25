@@ -6,10 +6,13 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import com.tencent.mmkv.MMKV
 import com.tools.android.translator.R
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivitySettingsBinding
 import com.tools.android.translator.support.GpConsole
+import com.tools.android.translator.support.setPoint
+import com.tools.android.translator.ui.server.ConnectServerActivity
 
 /**
  * Created on 2022/4/22
@@ -31,6 +34,17 @@ class SettingsActivity: BaseBindingActivity<ActivitySettingsBinding>(), View.OnC
             tvText.setOnClickListener(this@SettingsActivity)
             ivCamera.setOnClickListener(this@SettingsActivity)
             tvCamera.setOnClickListener(this@SettingsActivity)
+            serverLayout.setOnClickListener(this@SettingsActivity)
+        }
+
+
+        binding.save.setOnClickListener {
+            val editPopup = binding.editPopup.text.toString()
+            val editItrV = binding.editItrV.text.toString()
+            val editReferrer = binding.editReferrer.text.toString()
+            MMKV.defaultMMKV().encode("editPopup",editPopup)
+            MMKV.defaultMMKV().encode("editItrV",editItrV)
+            MMKV.defaultMMKV().encode("referrer",editReferrer)
         }
     }
 
@@ -41,6 +55,12 @@ class SettingsActivity: BaseBindingActivity<ActivitySettingsBinding>(), View.OnC
 
             R.id.iv_camera, R.id.tv_camera -> {
                 startActivity(Intent(this, CameraActivity::class.java))
+                finish()
+            }
+
+            R.id.server_layout->{
+                setPoint.point("itr_vpn_click")
+                startActivity(Intent(this, ConnectServerActivity::class.java))
                 finish()
             }
 

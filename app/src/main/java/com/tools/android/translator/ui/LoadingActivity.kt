@@ -41,6 +41,9 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
         lifecycleScope.launch {
             AdCenter.preloadAd(AdPos.MAIN)
             AdCenter.preloadAd(AdPos.TRANS)
+            AdCenter.preloadAd(AdPos.CONNECT)
+            AdCenter.preloadAd(AdPos.RESULT)
+            AdCenter.preloadAd(AdPos.SERVER_HOME)
 
             delay(880L)
             AdCenter.loadAd(this@LoadingActivity, AdPos.OPEN, listener)

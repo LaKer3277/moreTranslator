@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
+import android.util.Log
 import android.view.View
 import android.view.animation.DecelerateInterpolator
 import android.widget.FrameLayout
@@ -75,6 +76,7 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
     private val innerLangChoice = object :LanguageAdapter.ILangChoice {
         override fun onChoice(language: Language) {
             iLangChoice?.onChoice(language)
+            Log.e("qwer","====${language.available}=")
             if (!language.isAvailable()) return
             addNewHistory(language)
         }
@@ -114,11 +116,11 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
                 val sp = this.split(";")
                 if (sp.isNotEmpty()) {
                     for (s in sp) {
-                        listHistorySource.add(Language(code = s))
+                        listHistorySource.add(Language(code = s, available = 1))
                     }
                 }
             } else if (this.isNotEmpty()) {
-                listHistorySource.add(Language(code = this))
+                listHistorySource.add(Language(code = this, available = 1))
             }
         }
         App.ins.targetHistory.apply {
@@ -126,11 +128,11 @@ class LanguagePanel: FrameLayout, View.OnClickListener {
                 val sp = this.split(";")
                 if (sp.isNotEmpty()) {
                     for (s in sp) {
-                        listHistoryTarget.add(Language(code = s))
+                        listHistoryTarget.add(Language(code = s, available = 1))
                     }
                 }
             } else if (this.isNotEmpty()) {
-                listHistoryTarget.add(Language(code = this))
+                listHistoryTarget.add(Language(code = this, available = 1))
             }
         }
 
