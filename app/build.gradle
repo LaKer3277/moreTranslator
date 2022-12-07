@@ -12,8 +12,8 @@ android {
         applicationId "com.iTranslator.instanttool"
         minSdk 23
         targetSdk 31
-        versionCode 104
-        versionName "1.0.4"
+        versionCode 105
+        versionName "1.0.5"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -81,5 +81,6 @@ dependencies {
     implementation("com.google.firebase:firebase-config-ktx")
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation(platform("com.google.firebase:firebase-bom:29.3.1"))
+    implementation 'com.facebook.android:facebook-android-sdk:12.3.0'
 
 }
