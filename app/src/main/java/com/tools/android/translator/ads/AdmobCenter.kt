@@ -29,6 +29,7 @@ open class AdmobCenter {
             }
 
             override fun onAdLoaded(p0: AppOpenAd) {
+                Log.i("AdCenter", "load success : ${adPos.pos}")
                 admobOpen.buildInAd(p0)
                 load.invoke(admobOpen)
             }
@@ -46,6 +47,7 @@ open class AdmobCenter {
         val admobInterstitial = AdmobInterstitial(adPos, configId)
         InterstitialAd.load(ctx, configId.id, AdRequest.Builder().build(), object :InterstitialAdLoadCallback() {
             override fun onAdLoaded(p0: InterstitialAd) {
+                Log.i("AdCenter", "load success : ${adPos.pos}")
                 admobInterstitial.buildInAd(p0)
                 load.invoke(admobInterstitial)
             }
@@ -63,6 +65,7 @@ open class AdmobCenter {
         }
         AdLoader.Builder(ctx, configId.id)
             .forNativeAd {
+                Log.i("AdCenter", "load success : ${adPos.pos}")
                 admobNative.buildInAd(it)
                 load.invoke(admobNative)
             }

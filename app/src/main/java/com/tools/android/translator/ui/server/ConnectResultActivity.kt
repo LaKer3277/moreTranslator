@@ -44,7 +44,7 @@ class ConnectResultActivity : BaseBindingActivity<ActivityConnectResultBinding>(
     }
 
     private fun delayNativeShow() {
-        AdCenter.preloadAd(AdPos.TRANS)
+        AdCenter.preloadAd(AdPos.RESULT)
         lifecycleScope.launch {
             delay(100L)
             if (isPaused()) return@launch
@@ -55,10 +55,10 @@ class ConnectResultActivity : BaseBindingActivity<ActivityConnectResultBinding>(
 
     private var lastNative: NativeAds? = null
     private fun requestAndLoad() {
-        AdCenter.loadAd(this, AdPos.SERVER_HOME, object : AdsListener() {
+        AdCenter.loadAd(this, AdPos.RESULT, object : AdsListener() {
             override fun onAdLoaded(ad: Ad) {
                 if (isPaused()) {
-                    AdCenter.add2cache(AdPos.SERVER_HOME, ad)
+                    AdCenter.add2cache(AdPos.RESULT, ad)
                     return
                 }
                 if (ad !is NativeAds) return
@@ -75,6 +75,7 @@ class ConnectResultActivity : BaseBindingActivity<ActivityConnectResultBinding>(
                     ad.showCta(root, this.adAction)
                     ad.showImage(root, this.adImage)
                     ad.register(root)
+                    AdCenter.preloadAd(AdPos.RESULT)
                 }
             }
         })

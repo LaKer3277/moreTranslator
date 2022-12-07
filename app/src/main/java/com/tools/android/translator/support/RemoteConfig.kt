@@ -112,6 +112,14 @@ class RemoteConfig {
             "            \"nbm\":3\n" +
             "        }\n" +
             "    ],\n" +
+            "    \"iTran_home\":[\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
+            "            \"odkg\":\"n\",\n" +
+            "            \"nbm\":3\n" +
+            "        }\n" +
+            "    ],\n" +
             "    \"itr_hm\":[\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +

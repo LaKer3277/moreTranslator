@@ -41,7 +41,6 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     @Synchronized
     fun hasCached(adPos: AdPos): Boolean {
-        Log.i(tag,"=hasCached=${cacheAds.containsKey(adPos.pos)}==")
         return cacheAds.containsKey(adPos.pos)
     }
 
@@ -163,6 +162,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
             parsePosition(AdPos.MAIN, jsonObject.optJSONArray(AdPos.MAIN.pos))
             parsePosition(AdPos.OPEN, jsonObject.optJSONArray(AdPos.OPEN.pos))
+            parsePosition(AdPos.HOME, jsonObject.optJSONArray(AdPos.HOME.pos))
             parsePosition(AdPos.TRANS, jsonObject.optJSONArray(AdPos.TRANS.pos))
             parsePosition(AdPos.CONNECT, jsonObject.optJSONArray(AdPos.CONNECT.pos))
             parsePosition(AdPos.RESULT, jsonObject.optJSONArray(AdPos.RESULT.pos))

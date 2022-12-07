@@ -13,8 +13,10 @@ import com.google.android.gms.ads.AdActivity
 import com.google.android.gms.ads.MobileAds
 import com.tencent.mmkv.MMKV
 import com.tools.android.translator.ads.AdConfig
+import com.tools.android.translator.ads.RefreshAd
 import com.tools.android.translator.support.Devices
 import com.tools.android.translator.support.RemoteConfig
+import com.tools.android.translator.ui.HomeActivity
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity
 import com.tools.android.translator.ui.translate.MainActivity.Companion.needFreshNav
@@ -41,7 +43,7 @@ class App: Application() {
     override fun onCreate() {
         super.onCreate()
         ins = this
-        Core.init(this,MainActivity::class)
+        Core.init(this,HomeActivity::class)
         if (!packageName.equals(processName(this))){
             return
         }
@@ -116,6 +118,7 @@ class App: Application() {
             Log.i("ProcessLifecycle", "onActivityStopped: $activity")
             --nForeActivity
             if (nForeActivity<=0){
+                RefreshAd.resetAll()
                 delayJob = GlobalScope.launch {
                     delay(2990L)
                     bHotLoading = true

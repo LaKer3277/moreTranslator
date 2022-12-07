@@ -15,11 +15,19 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toRightOf="parent"/>
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_back"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/back"
+        android:layout_marginLeft="20dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@id/iv_choose_server"
+        app:layout_constraintBottom_toBottomOf="@id/iv_choose_server"  />
+    <androidx.appcompat.widget.AppCompatImageView
         android:layout_width="45dp"
         android:layout_height="35dp"
         android:src="@mipmap/vpn"
-        android:layout_marginLeft="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="@id/iv_back"
         app:layout_constraintTop_toTopOf="@id/iv_choose_server"
         app:layout_constraintBottom_toBottomOf="@id/iv_choose_server"/>
     <androidx.appcompat.widget.AppCompatTextView
@@ -78,23 +86,21 @@
         android:id="@+id/server_home_ad"
         android:layout_width="match_parent"
         android:layout_height="211dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_margin="20dp"
         layout="@layout/native_connect_server"
-        app:layout_constraintBottom_toTopOf="@id/include_nav"/>
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_cover"
         android:layout_width="match_parent"
         android:layout_height="211dp"
         android:scaleType="fitXY"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp"
+        android:layout_margin="20dp"
         android:src="@mipmap/server_home_cover"
-        app:layout_constraintBottom_toTopOf="@id/include_nav"/>
-    <include
-        android:id="@+id/include_nav"
-        layout="@layout/include_navigate"
-        android:layout_width="match_parent"
-        android:layout_height="65dp"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
+<!--    <include-->
+<!--        android:id="@+id/include_nav"-->
+<!--        layout="@layout/include_navigate"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="65dp"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent" />-->
 </androidx.constraintlayout.widget.ConstraintLayout>

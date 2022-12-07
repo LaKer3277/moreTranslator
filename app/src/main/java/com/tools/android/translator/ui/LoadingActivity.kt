@@ -5,7 +5,9 @@ import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.KeyEvent
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ActivityUtils
 import com.tools.android.translator.App
 import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.ads.AdPos
@@ -44,6 +46,7 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
             AdCenter.preloadAd(AdPos.CONNECT)
             AdCenter.preloadAd(AdPos.RESULT)
             AdCenter.preloadAd(AdPos.SERVER_HOME)
+            AdCenter.preloadAd(AdPos.HOME)
 
             delay(880L)
             AdCenter.loadAd(this@LoadingActivity, AdPos.OPEN, listener)
@@ -82,8 +85,9 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
     }
 
     private fun enterMain() {
-         val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
+        if (!ActivityUtils.isActivityExistsInStack(HomeActivity::class.java)){
+            startActivity(Intent(this,HomeActivity::class.java))
+        }
         finish()
     }
 
@@ -112,6 +116,13 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
             }
         })
         valueAni?.start()
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode== KeyEvent.KEYCODE_BACK){
+            return true
+        }
+        return false
     }
 
     companion object {

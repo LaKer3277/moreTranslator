@@ -26,33 +26,12 @@ class SettingsActivity: BaseBindingActivity<ActivitySettingsBinding>(), View.OnC
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.includeNav.apply {
-            ivSetting.isSelected = true
-            tvSetting.setTextColor(Color.parseColor("#FBB79F"))
-
-            ivText.setOnClickListener(this@SettingsActivity)
-            tvText.setOnClickListener(this@SettingsActivity)
-            ivCamera.setOnClickListener(this@SettingsActivity)
-            tvCamera.setOnClickListener(this@SettingsActivity)
-            serverLayout.setOnClickListener(this@SettingsActivity)
-        }
+        binding.ivBack.setOnClickListener { finish() }
     }
 
     @SuppressLint("QueryPermissionsNeeded")
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_text, R.id.tv_text -> finish()
-
-            R.id.iv_camera, R.id.tv_camera -> {
-                startActivity(Intent(this, CameraActivity::class.java))
-                finish()
-            }
-
-            R.id.server_layout->{
-                setPoint.point("itr_vpn_click")
-                startActivity(Intent(this, ConnectServerActivity::class.java))
-                finish()
-            }
 
             R.id.tv_rate -> GpConsole.skip2Market(packageName)
 

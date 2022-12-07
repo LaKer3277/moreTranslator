@@ -8,6 +8,7 @@ enum class AdPos(val pos: String) {
 
     OPEN("iTran_sykp"),
     MAIN("iTran_syys"),
+    HOME("iTran_home"),
     TRANS("iTran_tr"),
     CONNECT("itr_link"),
     RESULT("itr_result"),

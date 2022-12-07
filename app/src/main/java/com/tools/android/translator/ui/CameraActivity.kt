@@ -79,16 +79,25 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
     }*/
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.includeNav.apply {
-            ivCamera.isSelected = true
-            tvCamera.setTextColor(Color.parseColor("#FBB79F"))
-
-            ivText.setOnClickListener(this@CameraActivity)
-            tvText.setOnClickListener(this@CameraActivity)
-            ivSetting.setOnClickListener(this@CameraActivity)
-            tvSetting.setOnClickListener(this@CameraActivity)
-            serverLayout.setOnClickListener(this@CameraActivity)
+//        binding.includeNav.apply {
+//            ivCamera.isSelected = true
+//            tvCamera.setTextColor(Color.parseColor("#FBB79F"))
+//
+//            ivText.setOnClickListener(this@CameraActivity)
+//            tvText.setOnClickListener(this@CameraActivity)
+//            ivSetting.setOnClickListener(this@CameraActivity)
+//            tvSetting.setOnClickListener(this@CameraActivity)
+//            serverLayout.setOnClickListener(this@CameraActivity)
+//        }
+        binding.apply {
+            tvLaSource.setOnClickListener(this@CameraActivity)
+            arrowSource.setOnClickListener(this@CameraActivity)
+            tvLaTarget.setOnClickListener(this@CameraActivity)
+            arrowTarget.setOnClickListener(this@CameraActivity)
+            ivBack.setOnClickListener { finish() }
         }
+
+
         mPreviewView = binding.previewView
         mPreviewView.post {
             displayId = mPreviewView.display.displayId
@@ -113,17 +122,17 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.iv_text, R.id.tv_text -> finish()
-            R.id.server_layout->{
-                setPoint.point("itr_vpn_click")
-                startActivity(Intent(this, ConnectServerActivity::class.java))
-                finish()
-            }
-
-            R.id.iv_setting, R.id.tv_setting -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                finish()
-            }
+//            R.id.iv_text, R.id.tv_text -> finish()
+//            R.id.server_layout->{
+//                setPoint.point("itr_vpn_click")
+//                startActivity(Intent(this, ConnectServerActivity::class.java))
+//                finish()
+//            }
+//
+//            R.id.iv_setting, R.id.tv_setting -> {
+//                startActivity(Intent(this, SettingsActivity::class.java))
+//                finish()
+//            }
 
             R.id.camera1 -> takePhoto()
 
@@ -141,7 +150,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                 toastShort("Copied")
             }
 
-            R.id.bg_source -> {
+            R.id.tv_la_source,R.id.arrow_source -> {
                 binding.languagePanel.root.apply {
                     expand()
                     if (!LanguageAdapter.isCurrentSource)
@@ -149,7 +158,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
                 }
             }
 
-            R.id.bg_target -> {
+            R.id.tv_la_target,R.id.arrow_target -> {
                 binding.languagePanel.root.apply {
                     expand()
                     if (LanguageAdapter.isCurrentSource)

@@ -37,7 +37,7 @@ import com.tools.android.translator.ui.translate.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>(), View.OnClickListener,
+class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>(),
     IServerConnectCallback, ITimerCallback {
     private var connect=false
     private var connecting=false
@@ -72,17 +72,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     }
 
     private fun setListener(){
-        binding.includeNav.apply {
-            ivServer.isSelected = true
-            tvServer.setTextColor(Color.parseColor("#FBB79F"))
-
-            ivText.setOnClickListener(this@ConnectServerActivity)
-            tvText.setOnClickListener(this@ConnectServerActivity)
-            ivSetting.setOnClickListener(this@ConnectServerActivity)
-            tvSetting.setOnClickListener(this@ConnectServerActivity)
-            ivCamera.setOnClickListener(this@ConnectServerActivity)
-            tvCamera.setOnClickListener(this@ConnectServerActivity)
-        }
+        binding.ivBack.setOnClickListener { finish() }
 
         binding.ivConnectBtn.setOnClickListener {
             if(!connecting){
@@ -230,24 +220,6 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
         return if (connect) fl else instance-fl
     }
 
-    override fun onClick(v: View?) {
-        when (v?.id) {
-            R.id.iv_text, R.id.tv_text -> finish()
-
-            R.id.iv_setting, R.id.tv_setting -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                finish()
-            }
-
-            R.id.iv_camera, R.id.tv_camera -> {
-                if(checkCameraPermission()){
-                    startActivity(Intent(this, CameraActivity::class.java))
-                    finish()
-                }
-            }
-        }
-    }
-
     private fun checkCameraPermission(): Boolean {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) return true
         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
@@ -334,6 +306,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
                     ad.showCta(root, this.adAction)
                     ad.showImage(root, this.adImage)
                     ad.register(root)
+                    AdCenter.preloadAd(AdPos.SERVER_HOME)
                 }
             }
         })
