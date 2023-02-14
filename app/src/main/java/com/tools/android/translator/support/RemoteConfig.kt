@@ -23,7 +23,7 @@ class RemoteConfig {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
     }
 
-//    private val remoteConfig = Firebase.remoteConfig
+    private val remoteConfig = Firebase.remoteConfig
     init {
 //        if (!App.isRelease) {
 //            //如果是调试，启用开发者模式，以便可以频繁刷新缓存
@@ -41,28 +41,28 @@ class RemoteConfig {
         }
     }
     private fun fetchAndActivate(action: () -> Unit) {
-//        remoteConfig.fetchAndActivate()
-//            .addOnCompleteListener {
-//                if (it.isSuccessful) {
-//                    ServerManager.readServerConfig(remoteConfig.getString("itr_ser"))
-//                    ServerManager.readCityConfig(remoteConfig.getString("itr_fat"))
-//                    val itr_popshow=remoteConfig.getString("itr_popshow")
-//                    if (itr_popshow.isNotEmpty()){
-//                        itrPopShow=itr_popshow
-//                    }
-//                    val itr_v = remoteConfig.getString("itr_v")
-//                    if (itr_v.isNotEmpty()){
-//                        itrV=itr_v
-//                    }
-//
-//                    val itranslator_set = remoteConfig.getString("itranslator_set")
-//                    if (itranslator_set.isNotEmpty()){
-//                        iTranslatorSet=itranslator_set
-//                    }
-//
-//                    action()
-//                }
-//            }
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    ServerManager.readServerConfig(remoteConfig.getString("itr_ser"))
+                    ServerManager.readCityConfig(remoteConfig.getString("itr_fat"))
+                    val itr_popshow=remoteConfig.getString("itr_popshow")
+                    if (itr_popshow.isNotEmpty()){
+                        itrPopShow=itr_popshow
+                    }
+                    val itr_v = remoteConfig.getString("itr_v")
+                    if (itr_v.isNotEmpty()){
+                        itrV=itr_v
+                    }
+
+                    val itranslator_set = remoteConfig.getString("itranslator_set")
+                    if (itranslator_set.isNotEmpty()){
+                        iTranslatorSet=itranslator_set
+                    }
+
+                    action()
+                }
+            }
     }
 
 
@@ -74,106 +74,188 @@ class RemoteConfig {
         }*/
         return adLocal
     }
-
-
     val localServerList= arrayListOf(
         ServerBean(
-            ip = "100.223.52.0",
-            mima = "123456",
-            guo = "Japan",
-            cheng = "Tokyo",
-            kou = 100,
+            ip = "192.54.56.156",
+            mima = "qLLEjorvbDD8sta2YTcl",
+            guo = "Switzerland",
+            cheng = "Zurich",
+            kou = 4740,
             zhang = "chacha20-ietf-poly1305"
         ),
         ServerBean(
-            ip = "100.223.52.78",
-            mima = "123456",
-            guo = "UnitedStates",
-            cheng = "newyork",
-            kou = 100,
+            ip = "51.161.153.248",
+            mima = "qLLEjorvbDD8sta2YTcl",
+            guo = "Australia",
+            cheng = "Sydney",
+            kou = 4740,
             zhang = "chacha20-ietf-poly1305"
         )
     )
 
 
-    private val adLocal = "{\n" +
-            "    \"iTran_zks\":50,\n" +
-            "    \"iTran_ydj\":15,\n" +
-            "    \"iTran_sykp\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
-            "            \"odkg\":\"o\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
-            "            \"odkg\":\"o\",\n" +
-            "            \"nbm\":2\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_syys\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_home\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_hm\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_result\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_link\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_return\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_tr\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":1\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}"
+    private val adLocal = """{
+  "iTran_zks": 50,
+  "iTran_ydj": 15,
+  "iTran_sykp": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/6154675426",
+      "xmco": "o",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2897956699",
+      "xmco": "o",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/9463365042",
+      "xmco": "o",
+      "xmcn": 1
+    }
+  ],
+  "iTran_syys": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/1832287031",
+      "xmco": "n",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/4566261580",
+      "xmco": "n",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/8686836977",
+      "xmco": "n",
+      "xmcn": 1
+    }
+  ],
+  "iTran_tr": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/1009665119",
+      "xmco": "i",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2678464841",
+      "xmco": "i",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/5140481813",
+      "xmco": "i",
+      "xmcn": 1
+    }
+  ],
+  "itr_hm": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/8602134545",
+      "xmco": "n",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/4262847551",
+      "xmco": "n",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/5763136640",
+      "xmco": "n",
+      "xmcn": 1
+    }
+  ],
+  "itr_result": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/7435805808",
+      "xmco": "n",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/4618070772",
+      "xmco": "n",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/6593497424",
+      "xmco": "n",
+      "xmcn": 1
+    }
+  ],
+  "itr_link": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/8006156609",
+      "xmco": "i",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/3852370743",
+      "xmco": "i",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2347717384",
+      "xmco": "n",
+      "xmcn": 1
+    }
+  ],
+  "itr_return": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/4782309033",
+      "xmco": "i",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/5827210669",
+      "xmco": "i",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/8261802312",
+      "xmco": "i",
+      "xmcn": 1
+    }
+  ],
+  "iTran_home": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/1469274624",
+      "xmco": "n",
+      "xmcn": 3
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/1469274624",
+      "xmco": "n",
+      "xmcn": 2
+    },
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/9020461589",
+      "xmco": "n",
+      "xmcn": 1
+    }
+  ]
+}"""
 }
