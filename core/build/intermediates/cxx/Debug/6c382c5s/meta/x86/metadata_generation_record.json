@@ -1,0 +1,184 @@
+[
+  {
+    "level_": 0,
+    "message_": "Start JSON generation. Platform version: 23 min SDK version: x86",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -863255179
+  },
+  {
+    "level_": 0,
+    "message_": "rebuilding JSON C:\\AndroidDeveloper\\moreTranslator\\core\\build\\.cxx\\Debug\\6c382c5s\\x86\\android_gradle_build.json due to:",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1666384308
+  },
+  {
+    "level_": 0,
+    "message_": "- expected json C:\\AndroidDeveloper\\moreTranslator\\core\\build\\.cxx\\Debug\\6c382c5s\\x86\\android_gradle_build.json file is not present, will remove stale json folder",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -1362270702
+  },
+  {
+    "level_": 0,
+    "message_": "- missing previous command file C:\\AndroidDeveloper\\moreTranslator\\core\\build\\.cxx\\Debug\\6c382c5s\\x86\\metadata_generation_command.txt, will remove stale json folder",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 637850800
+  },
+  {
+    "level_": 0,
+    "message_": "- command changed from previous, will remove stale json folder",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1914720955
+  },
+  {
+    "level_": 0,
+    "message_": "created folder \u0027C:\\AndroidDeveloper\\moreTranslator\\core\\build\\.cxx\\Debug\\6c382c5s\\x86\u0027",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -1803436250
+  },
+  {
+    "level_": 0,
+    "message_": "executing ndkBuild Executable : C:\\Users\\Administrator\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd\narguments : \nNDK_PROJECT_PATH\u003dnull\nAPP_BUILD_SCRIPT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk\nNDK_APPLICATION_MK\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Application.mk\nAPP_ABI\u003dx86\nNDK_ALL_ABIS\u003dx86\nNDK_DEBUG\u003d1\nAPP_PLATFORM\u003dandroid-23\nNDK_OUT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\build\\intermediates\\cxx\\Debug\\6c382c5s/obj\nNDK_LIBS_OUT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\build\\intermediates\\cxx\\Debug\\6c382c5s/lib\n-j4\nAPP_SHORT_COMMANDS\u003dfalse\nLOCAL_SHORT_COMMANDS\u003dfalse\n-B\n-n\njvmArgs : \n\n",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 1419846680
+  },
+  {
+    "level_": 0,
+    "message_": "Executable : C:\\Users\\Administrator\\AppData\\Local\\Android\\Sdk\\ndk\\21.4.7075529\\ndk-build.cmd\narguments : \nNDK_PROJECT_PATH\u003dnull\nAPP_BUILD_SCRIPT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk\nNDK_APPLICATION_MK\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Application.mk\nAPP_ABI\u003dx86\nNDK_ALL_ABIS\u003dx86\nNDK_DEBUG\u003d1\nAPP_PLATFORM\u003dandroid-23\nNDK_OUT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\build\\intermediates\\cxx\\Debug\\6c382c5s/obj\nNDK_LIBS_OUT\u003dC:\\AndroidDeveloper\\moreTranslator\\core\\build\\intermediates\\cxx\\Debug\\6c382c5s/lib\n-j4\nAPP_SHORT_COMMANDS\u003dfalse\nLOCAL_SHORT_COMMANDS\u003dfalse\n-B\n-n\njvmArgs : \n\n",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -855349141
+  },
+  {
+    "level_": 0,
+    "message_": "parse and convert ndk-build output to build configuration JSON",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 357237642
+  },
+  {
+    "level_": 0,
+    "message_": "found application make file C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Application.mk",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -745012191
+  },
+  {
+    "level_": 0,
+    "message_": "done executing ndkBuild",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -2072883088
+  },
+  {
+    "level_": 0,
+    "message_": "write command file C:\\AndroidDeveloper\\moreTranslator\\core\\build\\.cxx\\Debug\\6c382c5s\\x86\\metadata_generation_command.txt",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": 556321640
+  },
+  {
+    "level_": 0,
+    "message_": "JSON generation completed without problems",
+    "file_": "C:\\AndroidDeveloper\\moreTranslator\\core\\src\\main\\jni\\Android.mk",
+    "tag_": "debug|x86",
+    "diagnosticCode_": 0,
+    "memoizedIsInitialized": 1,
+    "unknownFields": {
+      "fields": {},
+      "fieldsDescending": {}
+    },
+    "memoizedSize": -1,
+    "memoizedHashCode": -754519508
+  }
+]
