@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable/bg_0fffffff_28dp.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/bg_fdffee_24dp.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/bg_ffffff_28dp.xml" value="0.29384615384615387" />
+        <entry key="app/src/main/res/drawable/close.xml" value="0.28055555555555556" />
         <entry key="app/src/main/res/drawable/d_20252c_r12.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/d_20252c_r24.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/guo_selector.xml" value="0.29384615384615387" />
@@ -21,7 +22,7 @@
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/activity_web.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/dialog_limit.xml" value="0.25" />
-        <entry key="app/src/main/res/layout/dialog_server_guide.xml" value="0.13728470111448834" />
+        <entry key="app/src/main/res/layout/dialog_server_guide.xml" value="0.335" />
         <entry key="app/src/main/res/layout/include_navigate.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/item_language.xml" value="0.20833333333333334" />
         <entry key="app/src/main/res/layout/item_server.xml" value="0.20833333333333334" />

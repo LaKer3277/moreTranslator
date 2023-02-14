@@ -16,6 +16,7 @@ import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.ads.RefreshAd
 import com.tools.android.translator.support.Devices
 import com.tools.android.translator.support.RemoteConfig
+import com.tools.android.translator.tba.TbaJson
 import com.tools.android.translator.ui.HomeActivity
 import com.tools.android.translator.ui.LoadingActivity
 import com.tools.android.translator.ui.translate.MainActivity
@@ -55,6 +56,7 @@ class App: Application() {
         registerActivityLifecycleCallbacks(ActivityLifecycle())
         Uploader.ins.doStart()
         AdConfig.ins.checkFirst()
+        TbaJson.uploadTba(this)
     }
 
     private fun processName(applicationContext: Application): String {

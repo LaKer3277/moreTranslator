@@ -4,8 +4,10 @@ import android.app.Activity
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
+import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.ads.AdPos
 import com.tools.android.translator.ads.ConfigId
+import com.tools.android.translator.support.ReferrerManager
 
 /**
  * Created on 2022/4/27
@@ -34,6 +36,10 @@ class AdmobInterstitial(adPos: AdPos, configId: ConfigId): InterstitialAds(adPos
 
     override fun show(activity: Activity): Boolean {
         if (mInterstitial == null) return false
+        if (adPos==AdPos.BACK &&!ReferrerManager.canShowInterstitialAd()){
+            actDismiss?.invoke()
+            return false
+        }
         mInterstitial?.fullScreenContentCallback = showListener
         mInterstitial?.show(activity)
         return true

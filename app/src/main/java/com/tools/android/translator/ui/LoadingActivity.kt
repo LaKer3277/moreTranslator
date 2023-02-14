@@ -17,6 +17,7 @@ import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.base.AnimatorListener
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityLoadingBinding
+import com.tools.android.translator.support.ReferrerManager
 import com.tools.android.translator.ui.translate.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,6 +35,7 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
     private var isAdImpression = false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ReferrerManager.readReferrer()
         runLoading(10_000L) {
             if (isAdImpression) return@runLoading
             if (isPaused()) return@runLoading

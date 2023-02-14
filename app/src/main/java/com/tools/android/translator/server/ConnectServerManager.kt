@@ -1,10 +1,12 @@
 package com.tools.android.translator.server
 
+import android.util.Log
 import com.github.shadowsocks.Core
 import com.github.shadowsocks.aidl.IShadowsocksService
 import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.bg.BaseService
 import com.github.shadowsocks.preference.DataStore
+import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.base.BaseActivity
 import com.tools.android.translator.interfaces.IServerConnectCallback
 import kotlinx.coroutines.GlobalScope
@@ -15,6 +17,7 @@ object ConnectServerManager : ShadowsocksConnection.Callback {
     private var state = BaseService.State.Stopped
     var serverBean= ServerBean()
     var lastServer= ServerBean()
+    var fastBean=ServerBean()
     private val sc= ShadowsocksConnection(true)
     private var iServerConnectCallback:IServerConnectCallback?=null
 
@@ -28,7 +31,8 @@ object ConnectServerManager : ShadowsocksConnection.Callback {
         state= BaseService.State.Connecting
         GlobalScope.launch {
             if (serverBean.isFast()){
-                DataStore.profileId = ServerManager.getFastServer().getServerId()
+                fastBean=ServerManager.getFastServer()
+                DataStore.profileId = fastBean.getServerId()
             }else{
                 DataStore.profileId = serverBean.getServerId()
             }
@@ -53,6 +57,7 @@ object ConnectServerManager : ShadowsocksConnection.Callback {
         if (isConnected()){
             lastServer= serverBean
             TimeManager.start()
+            AdCenter.removeAllAd()
         }
         if (isStopped()){
             TimeManager.stop()

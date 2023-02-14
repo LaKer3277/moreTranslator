@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.tools.android.translator.App
 import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.support.ReferrerManager
 import com.tools.android.translator.support.RemoteConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.MainScope
@@ -42,6 +43,17 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
     @Synchronized
     fun hasCached(adPos: AdPos): Boolean {
         return cacheAds.containsKey(adPos.pos)
+    }
+
+    fun removeAllAd(){
+        cacheAds.clear()
+        isRequesting.clear()
+        preloadAd(AdPos.MAIN)
+        preloadAd(AdPos.TRANS)
+        preloadAd(AdPos.CONNECT)
+        preloadAd(AdPos.RESULT)
+        preloadAd(AdPos.SERVER_HOME)
+        preloadAd(AdPos.HOME)
     }
 
     fun preloadAd(adPos: AdPos) {

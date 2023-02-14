@@ -27,6 +27,7 @@ import com.tools.android.translator.databinding.ActivityHomeBinding
 import com.tools.android.translator.dialog.LimitDialog
 import com.tools.android.translator.dialog.ServerGuideDialog
 import com.tools.android.translator.server.ConnectServerManager
+import com.tools.android.translator.support.ReferrerManager
 import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.support.setPoint
 import com.tools.android.translator.ui.server.ConnectServerActivity
@@ -184,50 +185,12 @@ class HomeActivity:BaseBindingActivity<ActivityHomeBinding>() {
     private fun checkReferrer(){
         when(RemoteConfig.ins.itrV){
             "0"->showServerGuideDialog()
-            "1"->readReferrer {
-                //    1. referrer字段包含【fb4a】【gclid】【not%20set】【youtubeads】【%7B%22】识别为买量
-                if(it.contains("fb4a")||it.contains("gclid")||
-                    it.contains("not%20set")||it.contains("youtubeads")||it.contains("%7B%22")){
-                    showServerGuideDialog()
-                }
+            "1"->if (ReferrerManager.isBuyUser()){
+                showServerGuideDialog()
             }
-            "2"->readReferrer {
-                //    1. FB用户为referrer字段包含facebook.或者fb4a
-                if (it.contains("facebook")||it.contains("fb4a")){
-                    showServerGuideDialog()
-                }
+            "2"->if (ReferrerManager.isFB()){
+                showServerGuideDialog()
             }
-        }
-    }
-
-    private fun readReferrer(callback:(referrer:String)->Unit){
-
-        val decodeString = MMKV.defaultMMKV().decodeString("referrer", "")?:""
-        if(decodeString.isEmpty()){
-            val referrerClient = InstallReferrerClient.newBuilder(App.ins).build()
-            referrerClient.startConnection(object : InstallReferrerStateListener {
-                override fun onInstallReferrerSetupFinished(responseCode: Int) {
-                    try {
-                        referrerClient.endConnection()
-                        when (responseCode) {
-                            InstallReferrerClient.InstallReferrerResponse.OK -> {
-                                val installReferrer = referrerClient.installReferrer.installReferrer
-                                MMKV.defaultMMKV().encode("referrer",installReferrer)
-                                callback.invoke(installReferrer)
-                            }
-                            else->{
-
-                            }
-                        }
-                    } catch (e: Exception) {
-
-                    }
-                }
-                override fun onInstallReferrerServiceDisconnected() {
-                }
-            })
-        }else{
-            callback.invoke(decodeString)
         }
     }
 

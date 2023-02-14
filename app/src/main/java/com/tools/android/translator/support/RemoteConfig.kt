@@ -17,6 +17,7 @@ class RemoteConfig {
     var itrPopShow="cold"
     var itrV="2"
     var isShowingGuideDialog=false
+    var iTranslatorSet="2"
 
     companion object {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
@@ -53,10 +54,18 @@ class RemoteConfig {
 //                    if (itr_v.isNotEmpty()){
 //                        itrV=itr_v
 //                    }
+//
+//                    val itranslator_set = remoteConfig.getString("itranslator_set")
+//                    if (itranslator_set.isNotEmpty()){
+//                        iTranslatorSet=itranslator_set
+//                    }
+//
 //                    action()
 //                }
 //            }
     }
+
+
 
     fun getAdsConfig(): String {
         /*var config: String? = remoteConfig.getString("")
@@ -80,7 +89,7 @@ class RemoteConfig {
             ip = "100.223.52.78",
             mima = "123456",
             guo = "UnitedStates",
-            cheng = "Tokyo",
+            cheng = "newyork",
             kou = 100,
             zhang = "chacha20-ietf-poly1305"
         )
