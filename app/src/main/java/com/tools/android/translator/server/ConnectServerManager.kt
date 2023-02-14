@@ -5,6 +5,7 @@ import com.github.shadowsocks.aidl.IShadowsocksService
 import com.github.shadowsocks.aidl.ShadowsocksConnection
 import com.github.shadowsocks.bg.BaseService
 import com.github.shadowsocks.preference.DataStore
+import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.base.BaseActivity
 import com.tools.android.translator.interfaces.IServerConnectCallback
 import kotlinx.coroutines.GlobalScope
@@ -53,6 +54,7 @@ object ConnectServerManager : ShadowsocksConnection.Callback {
         if (isConnected()){
             lastServer= serverBean
             TimeManager.start()
+            AdCenter.removeAllAd()
         }
         if (isStopped()){
             TimeManager.stop()

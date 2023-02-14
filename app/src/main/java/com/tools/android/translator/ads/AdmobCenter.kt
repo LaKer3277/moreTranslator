@@ -19,6 +19,7 @@ import com.tools.android.translator.ads.body.AdmobOpen
  * Created on 2022/4/27
  * Describe:
  */
+
 open class AdmobCenter {
 
     fun loadOpen(ctx: Context, adPos: AdPos, configId: ConfigId, load: (ad: Ad?) -> Unit ) {

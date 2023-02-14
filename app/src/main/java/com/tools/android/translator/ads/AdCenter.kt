@@ -29,6 +29,17 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
         }
     }
 
+    fun removeAllAd(){
+        cacheAds.clear()
+        isRequesting.clear()
+        preloadAd(AdPos.MAIN)
+        preloadAd(AdPos.TRANS)
+        preloadAd(AdPos.CONNECT)
+        preloadAd(AdPos.RESULT)
+        preloadAd(AdPos.SERVER_HOME)
+        preloadAd(AdPos.HOME)
+    }
+
     @Synchronized
     fun getCache(adPos: AdPos): Ad? {
         return cacheAds.remove(adPos.pos)
@@ -146,9 +157,9 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             for (i in 0 until jsonArray.length()) {
                 val json = jsonArray.optJSONObject(i) ?: continue
                 listIds.add(ConfigId(
-                    id = json.optString("ltof"),
-                    type = json.optString("odkg"),
-                    priority = json.optInt("nbm")
+                    id = json.optString("xmcd"),
+                    type = json.optString("xmco"),
+                    priority = json.optInt("xmcn")
                 ))
             }
             listIds.sortBy { it.priority * -1 }

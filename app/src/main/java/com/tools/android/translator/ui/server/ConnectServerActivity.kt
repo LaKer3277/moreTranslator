@@ -47,6 +47,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     private var permission=false
     private val registerResult=registerForActivityResult(StartService()) {
         if (!it &&permission) {
+            setPoint.point("itr_vpn_getpermisson")
             permission = false
             connectServer()
         } else {
@@ -71,8 +72,17 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
         }
     }
 
+    override fun onBackPressed() {
+        if (!connecting){
+            finish()
+        }
+    }
+
+
     private fun setListener(){
-        binding.ivBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener {
+            onBackPressed()
+        }
 
         binding.ivConnectBtn.setOnClickListener {
             if(!connecting){

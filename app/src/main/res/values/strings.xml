@@ -3,4 +3,5 @@
 
     <string name="unknown_error">Unknown Error</string>
     <string name="downloaded_models_label">Downloaded models: %1$s</string>
+    <string name="facebook_app_id">522603709392286</string>
 </resources>

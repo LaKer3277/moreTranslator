@@ -16,10 +16,7 @@ import com.lzy.okgo.callback.StringCallback
 import com.lzy.okgo.model.Response
 import com.tencent.mmkv.MMKV
 import com.tools.android.translator.App
-import com.tools.android.translator.ads.AdCenter
-import com.tools.android.translator.ads.AdPos
-import com.tools.android.translator.ads.AdsListener
-import com.tools.android.translator.ads.RefreshAd
+import com.tools.android.translator.ads.*
 import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.ads.body.NativeAds
 import com.tools.android.translator.base.BaseBindingActivity
@@ -29,6 +26,7 @@ import com.tools.android.translator.dialog.ServerGuideDialog
 import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.support.setPoint
+import com.tools.android.translator.support.toast
 import com.tools.android.translator.ui.server.ConnectServerActivity
 import com.tools.android.translator.ui.translate.MainActivity
 import kotlinx.coroutines.delay
@@ -62,7 +60,9 @@ class HomeActivity:BaseBindingActivity<ActivityHomeBinding>() {
             setPoint.point("itr_vpn_click")
             startActivity(Intent(this,ConnectServerActivity::class.java))
         }
-        binding.ivSet.setOnClickListener { startActivity(Intent(this,SettingsActivity::class.java)) }
+        binding.ivSet.setOnClickListener {
+            startActivity(Intent(this,SettingsActivity::class.java))
+        }
     }
 
     override fun onRequestPermissionsResult(

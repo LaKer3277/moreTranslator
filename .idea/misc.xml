@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/AndroidDeveloper/moreTranslator/app/src/main/res/layout/dialog_server_guide.xml" value="0.12310030395136778" />
         <entry key="app/src/main/res/drawable/bg_0fffffff_28dp.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/bg_fdffee_24dp.xml" value="0.29384615384615387" />
         <entry key="app/src/main/res/drawable/bg_ffffff_28dp.xml" value="0.29384615384615387" />
@@ -32,7 +33,7 @@
       </map>
     </option>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

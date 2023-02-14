@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.tools.android.translator",
+  "applicationId": "com.iTranslator.instanttool",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 101,
-      "versionName": "1.0.1",
+      "versionCode": 107,
+      "versionName": "1.0.7",
       "outputFile": "app-release.apk"
     }
   ],
