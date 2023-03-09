@@ -2,6 +2,7 @@ package com.tools.android.translator.ui.server
 
 import android.Manifest
 import android.animation.ValueAnimator
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Color
@@ -16,6 +17,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.blankj.utilcode.util.SizeUtils.dp2px
 import com.github.shadowsocks.utils.StartService
+import com.google.android.a.c
 import com.tools.android.translator.App
 import com.tools.android.translator.R
 import com.tools.android.translator.ads.AdCenter
@@ -92,6 +94,20 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     }
 
     private fun doLogic(){
+        if(RemoteConfig.ins.isLimitUser){
+            AlertDialog.Builder(this).apply {
+                setMessage("Due to the policy reason , this service is not available in y country")
+                setCancelable(false)
+                setPositiveButton("confirm", object : DialogInterface.OnClickListener {
+                    override fun onClick(dialog: DialogInterface?, which: Int) {
+                        finish()
+                    }
+                })
+                show()
+            }
+            return
+        }
+
         AdCenter.preloadAd(AdPos.CONNECT)
         AdCenter.preloadAd(AdPos.RESULT)
         if(ConnectServerManager.isConnected()){

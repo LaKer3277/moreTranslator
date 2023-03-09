@@ -1,11 +1,16 @@
 package com.tools.android.translator.support
 
+import android.util.Log
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
+import com.lzy.okgo.OkGo
+import com.lzy.okgo.callback.StringCallback
+import com.lzy.okgo.model.Response
 import com.tencent.mmkv.MMKV
 import com.tools.android.translator.App
 import com.tools.android.translator.server.ServerBean
 import com.tools.android.translator.server.ServerManager
+import org.json.JSONObject
 
 /**
  * Created on 2022/4/27
@@ -18,6 +23,7 @@ class RemoteConfig {
     var itrV="2"
     var isShowingGuideDialog=false
     var iTranslatorSet="2"
+    var isLimitUser=false
 
     companion object {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
@@ -34,6 +40,7 @@ class RemoteConfig {
     }
 
     fun init() {
+        checkIsLimitUser()
         ServerManager.createOrUpdateProfile(localServerList)
 
         fetchAndActivate {
@@ -65,6 +72,21 @@ class RemoteConfig {
 //            }
     }
 
+    private fun checkIsLimitUser(){
+        OkGo.get<String>("https://api.myip.com/")
+            .execute(object : StringCallback(){
+                override fun onSuccess(response: Response<String>?) {
+//                        ipJson="""{"ip":"89.187.185.11","country":"United States","cc":"IR"}"""
+                    try {
+                        isLimitUser = JSONObject(response?.body()?.toString()).optString("cc").limitArea()
+                    }catch (e:Exception){
+
+                    }
+                }
+            })
+    }
+
+    private fun String.limitArea()=contains("IR")||contains("MO")||contains("HK")||contains("CN")
 
 
     fun getAdsConfig(): String {
