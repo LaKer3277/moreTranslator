@@ -70,10 +70,9 @@ object ReferrerManager {
     }
 
     fun isBuyUser():Boolean {
-//        val local = readLocalReferrer()
-//        return local.contains("fb4a")||local.contains("gclid")||
-//                local.contains("not%20set")||local.contains("youtubeads")||local.contains("%7B%22")
-        return true
+        val local = readLocalReferrer()
+        return local.contains("fb4a")||local.contains("gclid")||
+                local.contains("not%20set")||local.contains("youtubeads")||local.contains("%7B%22")
     }
 
     fun isFB():Boolean {

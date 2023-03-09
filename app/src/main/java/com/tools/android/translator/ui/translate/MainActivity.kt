@@ -371,4 +371,10 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         var needFreshNav = true
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        needFreshNav = true
+    }
+
 }
