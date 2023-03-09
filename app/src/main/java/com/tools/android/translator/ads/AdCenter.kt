@@ -48,12 +48,18 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
     fun removeAllAd(){
         cacheAds.clear()
         isRequesting.clear()
+        preLoadAll()
+    }
+
+    fun preLoadAll(){
         preloadAd(AdPos.MAIN)
         preloadAd(AdPos.TRANS)
         preloadAd(AdPos.CONNECT)
         preloadAd(AdPos.RESULT)
         preloadAd(AdPos.SERVER_HOME)
         preloadAd(AdPos.HOME)
+        preloadAd(AdPos.BACK2)
+        preloadAd(AdPos.BACK4)
     }
 
     fun preloadAd(adPos: AdPos) {
@@ -125,7 +131,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
         }
 
         val removeAt = configIds.removeAt(0)
-        Log.i(tag, "requesting ad: ${adPos.pos} - ${removeAt.id}")
+        Log.i(tag, "requesting ad: ${adPos.pos} - ${removeAt.id} - ${removeAt.type}")
         when (removeAt.type) {
             "o" -> loadOpen(ctx, adPos, removeAt) {
                 checkIt(it)
@@ -180,6 +186,8 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
             parsePosition(AdPos.RESULT, jsonObject.optJSONArray(AdPos.RESULT.pos))
             parsePosition(AdPos.SERVER_HOME, jsonObject.optJSONArray(AdPos.SERVER_HOME.pos))
             parsePosition(AdPos.BACK, jsonObject.optJSONArray(AdPos.BACK.pos))
+            parsePosition(AdPos.BACK2, jsonObject.optJSONArray(AdPos.BACK2.pos))
+            parsePosition(AdPos.BACK4, jsonObject.optJSONArray(AdPos.BACK4.pos))
         } catch (e: Exception) {
 
         }

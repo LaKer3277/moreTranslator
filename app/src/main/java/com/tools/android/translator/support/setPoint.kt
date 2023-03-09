@@ -8,8 +8,16 @@ import com.google.firebase.ktx.Firebase
 object setPoint {
 //    private val remoteConfig=Firebase.analytics
 
-    fun point(name:String){
-        Log.i("AdCenter","set point:$name")
-//        remoteConfig.logEvent(name, Bundle())
+    fun point(name:String,key:String="",value:String=""){
+        Log.i("AdCenter","set point:$name=====$key====$value")
+//        val bundle = Bundle()
+//        if(key.isNotEmpty()){
+//            bundle.putString(key,value)
+//        }
+//        remoteConfig.logEvent(name, bundle)
+    }
+
+    fun setUserType(type:String=RemoteConfig.ins.planType.toLowerCase()){
+//        remoteConfig.setUserProperty("itranslator_t",type)
     }
 }

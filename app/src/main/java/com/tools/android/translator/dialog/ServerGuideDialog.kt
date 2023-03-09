@@ -33,6 +33,8 @@ class ServerGuideDialog: DialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        dialog?.setCancelable(false)
+        setPoint.point("tan_itranslator")
         view.findViewById<AppCompatTextView>(R.id.tv_connect).setOnClickListener {
             setPoint.point("itr_noti_conn_click")
             RemoteConfig.ins.isShowingGuideDialog=false

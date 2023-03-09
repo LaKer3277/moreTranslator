@@ -63,7 +63,7 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
         binding.clear.setOnClickListener {
             clearEtText()
         }
-        binding.ivBack.setOnClickListener { finish() }
+        binding.ivBack.setOnClickListener { onBackPressed() }
     }
 
     override fun onResume() {
@@ -78,7 +78,26 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     override fun onBackPressed() {
         if (hideKeyboard(binding.etSource)) return
         if (binding.languagePanel.root.collapse()) return
-        super.onBackPressed()
+
+        AdCenter.loadAd(this, AdPos.BACK2, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                if (ad !is InterstitialAds) {
+                    return
+                }
+                ad.show(this@MainActivity)
+            }
+
+            override fun onAdDismiss() {
+                super.onAdDismiss()
+                AdCenter.preloadAd(AdPos.BACK2)
+                finish()
+            }
+
+            override fun onAdError(err: String?) {
+                AdCenter.preloadAd(AdPos.BACK2)
+                finish()
+            }
+        }, justCache = true)
     }
 
     override fun onClick(v: View?) {
@@ -351,4 +370,5 @@ class MainActivity : BaseBindingActivity<ActivityMainBinding>(), View.OnClickLis
     companion object {
         var needFreshNav = true
     }
+
 }

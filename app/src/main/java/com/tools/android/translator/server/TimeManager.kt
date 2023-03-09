@@ -1,6 +1,7 @@
 package com.tools.android.translator.server
 
 import com.tools.android.translator.interfaces.ITimerCallback
+import com.tools.android.translator.support.setPoint
 import com.tools.android.translator.support.transTime
 import kotlinx.coroutines.*
 
@@ -31,5 +32,9 @@ object TimeManager {
 
     fun setTimerCallback(iTimerCallback:ITimerCallback?){
         this.iTimerCallback=iTimerCallback
+    }
+    
+    fun point(){
+        setPoint.point("time_itranslator", key = "time", value = "$time")
     }
 }

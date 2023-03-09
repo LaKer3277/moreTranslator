@@ -36,7 +36,7 @@ class AdmobInterstitial(adPos: AdPos, configId: ConfigId): InterstitialAds(adPos
 
     override fun show(activity: Activity): Boolean {
         if (mInterstitial == null) return false
-        if (adPos==AdPos.BACK &&!ReferrerManager.canShowInterstitialAd()){
+        if ((adPos==AdPos.BACK||adPos==AdPos.BACK2||adPos==AdPos.BACK4) &&!ReferrerManager.canShowInterstitialAd()){
             actDismiss?.invoke()
             return false
         }

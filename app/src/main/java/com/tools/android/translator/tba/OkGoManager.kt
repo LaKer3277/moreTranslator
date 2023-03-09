@@ -19,7 +19,7 @@ object OkGoManager {
 
     fun uploadEvent(jsonObject:JSONObject,install:Boolean){
         val path="$URL?waste=${CommonJson.getLogId()}&thee=${CommonJson.getOsCountry()}&kelly=${CommonJson.getManufacturer()}"
-        Log.e("qwer","==uploadEvent===${jsonObject.toString()}")
+//        Log.e("qwer","==uploadEvent===${jsonObject.toString()}")
         OkGo.post<String>(path)
             .retryCount(3)
             .headers("content-type","application/json")
@@ -34,13 +34,13 @@ object OkGoManager {
                             TbaJson.saveHasReferrerTag()
                         }
                     }
-                    Log.e("qwer","=onSuccess==${response?.body()?.toString()}==")
+//                    Log.e("qwer","=onSuccess==${response?.body()?.toString()}==")
 
                 }
 
                 override fun onError(response: Response<String>?) {
                     super.onError(response)
-                    Log.e("qwer","=onError==${response?.body()?.toString()}==")
+//                    Log.e("qwer","=onError==${response?.body()?.toString()}==")
                 }
             })
     }

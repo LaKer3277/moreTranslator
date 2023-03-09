@@ -17,8 +17,11 @@ import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.base.AnimatorListener
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityLoadingBinding
+import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.support.ReferrerManager
-import com.tools.android.translator.ui.translate.MainActivity
+import com.tools.android.translator.support.RemoteConfig
+import com.tools.android.translator.support.setPoint
+import com.tools.android.translator.ui.server.ConnectServerActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -39,16 +42,11 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
         runLoading(10_000L) {
             if (isAdImpression) return@runLoading
             if (isPaused()) return@runLoading
-            enterMain()
+            checkPlan()
         }
         isAdImpression = false
         lifecycleScope.launch {
-            AdCenter.preloadAd(AdPos.MAIN)
-            AdCenter.preloadAd(AdPos.TRANS)
-            AdCenter.preloadAd(AdPos.CONNECT)
-            AdCenter.preloadAd(AdPos.RESULT)
-            AdCenter.preloadAd(AdPos.SERVER_HOME)
-            AdCenter.preloadAd(AdPos.HOME)
+            AdCenter.preLoadAll()
 
             delay(880L)
             AdCenter.loadAd(this@LoadingActivity, AdPos.OPEN, listener)
@@ -67,7 +65,7 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
         }
 
         override fun onAdError(err: String?) {
-            if (isPaused()) finish() else enterMain()
+            if (isPaused()) finish() else checkPlan()
         }
 
         override fun onAdShown() {
@@ -76,7 +74,7 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
 
         override fun onAdDismiss() {
             if (!App.ins.isAppForeground()) return
-            enterMain()
+            checkPlan()
         }
     }
 
@@ -90,6 +88,32 @@ class LoadingActivity: BaseBindingActivity<ActivityLoadingBinding>() {
         if (!ActivityUtils.isActivityExistsInStack(HomeActivity::class.java)){
             startActivity(Intent(this,HomeActivity::class.java))
         }
+        finish()
+    }
+
+    private fun checkPlan(){
+        if(!ReferrerManager.isBuyUser()){
+            setPoint.setUserType(type = "a")
+            enterMain()
+            return
+        }
+        RemoteConfig.ins.randomPlanType()
+        setPoint.setUserType()
+        if (ConnectServerManager.isConnected()){
+            enterMain()
+        }else{
+            if(RemoteConfig.ins.planType=="B"){
+                toVpnAc()
+            }else{
+                enterMain()
+            }
+        }
+    }
+
+    private fun toVpnAc(){
+        startActivity(Intent(this,ConnectServerActivity::class.java).apply {
+            putExtra("auto",true)
+        })
         finish()
     }
 

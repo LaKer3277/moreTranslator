@@ -1,7 +1,12 @@
 package com.tools.android.translator.ui.server
 
+import android.Manifest
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.View
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.tools.android.translator.R
 import com.tools.android.translator.ads.AdCenter
@@ -13,6 +18,8 @@ import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityConnectResultBinding
 import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.support.getServerLogo
+import com.tools.android.translator.ui.CameraActivity
+import com.tools.android.translator.ui.translate.MainActivity
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -36,6 +43,14 @@ class ConnectResultActivity : BaseBindingActivity<ActivityConnectResultBinding>(
         val lastServer = ConnectServerManager.lastServer
         binding.tvServerName.text=lastServer.guo
         binding.ivServerLogo.setImageResource(getServerLogo(lastServer))
+        binding.llcCameraTranslate.setOnClickListener {
+            if (checkCameraPermission()) {
+                startActivity(Intent(this, CameraActivity::class.java))
+            }
+        }
+        binding.llcTextTranslate.setOnClickListener {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -80,4 +95,24 @@ class ConnectResultActivity : BaseBindingActivity<ActivityConnectResultBinding>(
             }
         })
     }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 101) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startActivity(Intent(this, CameraActivity::class.java))
+            }
+        }
+    }
+
+    private fun checkCameraPermission(): Boolean {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) return true
+        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), 101)
+        return false
+    }
+
 }

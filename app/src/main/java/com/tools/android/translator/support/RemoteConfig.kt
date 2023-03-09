@@ -11,6 +11,7 @@ import com.tools.android.translator.App
 import com.tools.android.translator.server.ServerBean
 import com.tools.android.translator.server.ServerManager
 import org.json.JSONObject
+import java.util.*
 
 /**
  * Created on 2022/4/27
@@ -24,6 +25,8 @@ class RemoteConfig {
     var isShowingGuideDialog=false
     var iTranslatorSet="2"
     var isLimitUser=false
+    private var abItranslator="80"
+    var planType=""
 
     companion object {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
@@ -67,9 +70,21 @@ class RemoteConfig {
 //                        iTranslatorSet=itranslator_set
 //                    }
 //
+//                    val ab_itranslator = remoteConfig.getString("ab_itranslator")
+//                    if (ab_itranslator.isNotEmpty()){
+//                        abItranslator=ab_itranslator
+//                    }
+//
 //                    action()
 //                }
 //            }
+    }
+
+    fun randomPlanType(){
+        if(planType.isEmpty()){
+            val nextInt = Random().nextInt(100)
+            planType = if (str2Int(abItranslator)>=nextInt) "B" else "A"
+        }
     }
 
     private fun checkIsLimitUser(){
@@ -184,6 +199,34 @@ class RemoteConfig {
             "        }\n" +
             "    ],\n" +
             "    \"iTran_tr\":[\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
+            "            \"odkg\":\"i\",\n" +
+            "            \"nbm\":3\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
+            "            \"odkg\":\"i\",\n" +
+            "            \"nbm\":1\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"iTran_2back\":[\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
+            "            \"odkg\":\"i\",\n" +
+            "            \"nbm\":3\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"dls\":\"admob\",\n" +
+            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
+            "            \"odkg\":\"i\",\n" +
+            "            \"nbm\":1\n" +
+            "        }\n" +
+            "    ],\n" +
+            "    \"iTran_4back\":[\n" +
             "        {\n" +
             "            \"dls\":\"admob\",\n" +
             "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +

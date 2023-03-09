@@ -65,3 +65,13 @@ fun transTime(t:Long):String{
     }catch (e: Exception){}
     return "00:00:00"
 }
+
+
+fun str2Int(string: String):Int{
+    try {
+        return string.toInt()
+    }catch (e:Exception){
+
+    }
+    return 0
+}

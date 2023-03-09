@@ -94,7 +94,7 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             arrowSource.setOnClickListener(this@CameraActivity)
             tvLaTarget.setOnClickListener(this@CameraActivity)
             arrowTarget.setOnClickListener(this@CameraActivity)
-            ivBack.setOnClickListener { finish() }
+            ivBack.setOnClickListener { onBackPressed() }
         }
 
 
@@ -199,7 +199,26 @@ class CameraActivity: BaseBindingActivity<ActivityCameraBinding>(), View.OnClick
             return
         }
         if (binding.languagePanel.root.collapse()) return
-        super.onBackPressed()
+
+        AdCenter.loadAd(this, AdPos.BACK4, object :AdsListener() {
+            override fun onAdLoaded(ad: Ad) {
+                if (ad !is InterstitialAds) {
+                    return
+                }
+                ad.show(this@CameraActivity)
+            }
+
+            override fun onAdDismiss() {
+                super.onAdDismiss()
+                AdCenter.preloadAd(AdPos.BACK4)
+                finish()
+            }
+
+            override fun onAdError(err: String?) {
+                AdCenter.preloadAd(AdPos.BACK4)
+                finish()
+            }
+        }, justCache = true)
     }
 
     private fun begin2autoRecognize() {

@@ -13,6 +13,8 @@ enum class AdPos(val pos: String) {
     CONNECT("itr_link"),
     RESULT("itr_result"),
     SERVER_HOME("itr_hm"),
-    BACK("itr_return")
+    BACK("itr_return"),
+    BACK2("iTran_2back"),
+    BACK4("iTran_4back")
 
 }

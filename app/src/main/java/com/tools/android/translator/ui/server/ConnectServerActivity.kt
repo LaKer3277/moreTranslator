@@ -15,6 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
+import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils.dp2px
 import com.github.shadowsocks.utils.StartService
 import com.google.android.a.c
@@ -34,6 +35,7 @@ import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.server.TimeManager
 import com.tools.android.translator.support.*
 import com.tools.android.translator.ui.CameraActivity
+import com.tools.android.translator.ui.HomeActivity
 import com.tools.android.translator.ui.SettingsActivity
 import com.tools.android.translator.ui.translate.MainActivity
 import kotlinx.coroutines.delay
@@ -43,6 +45,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     IServerConnectCallback, ITimerCallback {
     private var connect=false
     private var connecting=false
+    private var autoConnect=false
     private val instance=dp2px(104F)
     private var connectAnimator:ValueAnimator?=null
 
@@ -69,7 +72,16 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
         TimeManager.setTimerCallback(this)
         setListener()
 
+        autoConnect=intent.getBooleanExtra("auto",false)
         if(intent.getBooleanExtra("auto",false)){
+            binding.ivConnectBtn.performClick()
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        autoConnect=intent?.getBooleanExtra("auto",false)?:false
+        if(autoConnect){
             binding.ivConnectBtn.performClick()
         }
     }
@@ -91,6 +103,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
                 startActivityForResult(Intent(this,ChooseServerActivity::class.java),1123)
             }
         }
+        binding.llcServerInfo.setOnClickListener { binding.ivChooseServer.performClick() }
     }
 
     private fun doLogic(){
@@ -134,6 +147,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     }
 
     private fun connectServer(){
+        setPoint.point("itranslator_con", key = "Isbuy", value = if(ReferrerManager.isBuyUser()) "True" else "False")
         ConnectServerManager.connect()
         startConnectAnimator(true)
     }
@@ -188,9 +202,10 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
         val bool=if(connect) ConnectServerManager.isConnected() else ConnectServerManager.isStopped()
         if (bool){
             if (connect){
-                setPoint.point("itr_vpn_succ")
+                setPoint.point("itr_vpn_succ" ,key = "Isbuy", value = if(ReferrerManager.isBuyUser()) "True" else "False")
                 updateConnectedUI()
             }else{
+                TimeManager.point()
                 setPoint.point("itr_vpn_dis")
                 updateStoppedUI()
                 updateServerInfo()
@@ -333,6 +348,9 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
 
     override fun onBackPressed() {
         if (!connecting){
+            if(!ActivityUtils.isActivityExistsInStack(HomeActivity::class.java)){
+                startActivity(Intent(this,HomeActivity::class.java))
+            }
             finish()
         }
     }

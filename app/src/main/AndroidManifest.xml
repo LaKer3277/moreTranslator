@@ -53,7 +53,7 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.server.ConnectServerActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".ui.server.ConnectResultActivity"
