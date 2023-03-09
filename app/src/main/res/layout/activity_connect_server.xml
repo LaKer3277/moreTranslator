@@ -83,7 +83,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="11sp"
+            android:textSize="14sp"
             android:textColor="#FBB79F"
             android:text="Faster server"
             android:layout_marginLeft="10dp"/>

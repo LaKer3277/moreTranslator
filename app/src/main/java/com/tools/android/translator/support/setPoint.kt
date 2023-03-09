@@ -18,6 +18,7 @@ object setPoint {
     }
 
     fun setUserType(type:String=RemoteConfig.ins.planType.toLowerCase()){
+        Log.i("AdCenter","set point user :$type")
 //        remoteConfig.setUserProperty("itranslator_t",type)
     }
 }

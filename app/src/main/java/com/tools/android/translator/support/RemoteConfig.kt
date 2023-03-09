@@ -23,9 +23,9 @@ class RemoteConfig {
     var itrPopShow="cold"
     var itrV="2"
     var isShowingGuideDialog=false
-    var iTranslatorSet="2"
+    var iTranslatorSet="4"
     var isLimitUser=false
-    private var abItranslator="80"
+    private var abItranslator="100"
     var planType=""
 
     companion object {

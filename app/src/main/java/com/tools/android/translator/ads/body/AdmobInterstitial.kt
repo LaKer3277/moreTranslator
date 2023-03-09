@@ -1,6 +1,7 @@
 package com.tools.android.translator.ads.body
 
 import android.app.Activity
+import android.util.Log
 import com.google.android.gms.ads.AdError
 import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.interstitial.InterstitialAd
@@ -36,7 +37,7 @@ class AdmobInterstitial(adPos: AdPos, configId: ConfigId): InterstitialAds(adPos
 
     override fun show(activity: Activity): Boolean {
         if (mInterstitial == null) return false
-        if ((adPos==AdPos.BACK||adPos==AdPos.BACK2||adPos==AdPos.BACK4) &&!ReferrerManager.canShowInterstitialAd()){
+        if (adPos!=AdPos.OPEN &&!ReferrerManager.canShowInterstitialAd()){
             actDismiss?.invoke()
             return false
         }

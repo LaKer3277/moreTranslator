@@ -87,6 +87,7 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
         if ((dailyClickUpper > 0 && AdConfig.ins.getClickCount() > dailyClickUpper)
             || dailyShownUpper > 0 && AdConfig.ins.getShownCount() > dailyShownUpper) {
+
             adsListener.onAdError("hasLimited")
             return
         }

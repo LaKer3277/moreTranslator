@@ -240,6 +240,7 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
     }
 
     private fun updateStoppedUI(){
+        binding.tvConnectTime.text="00:00:00"
         binding.ivServerStatus.setImageResource(R.mipmap.server_idle)
     }
 
