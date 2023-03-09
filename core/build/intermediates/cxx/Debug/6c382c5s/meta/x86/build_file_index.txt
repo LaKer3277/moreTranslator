@@ -1,2 +1,0 @@
-C:\AndroidDeveloper\moreTranslator\core\src\main\jni\Android.mk
-C:\AndroidDeveloper\moreTranslator\core\src\main\jni\Application.mk
