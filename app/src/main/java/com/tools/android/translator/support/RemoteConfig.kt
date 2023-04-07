@@ -1,6 +1,9 @@
 package com.tools.android.translator.support
 
+import android.content.ClipboardManager
+import android.content.Context
 import android.util.Log
+import android.webkit.WebView
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.lzy.okgo.OkGo
@@ -32,7 +35,7 @@ class RemoteConfig {
         val ins: RemoteConfig by lazy(LazyThreadSafetyMode.SYNCHRONIZED) { RemoteConfig() }
     }
 
-//    private val remoteConfig = Firebase.remoteConfig
+    private val remoteConfig = Firebase.remoteConfig
     init {
 //        if (!App.isRelease) {
 //            //如果是调试，启用开发者模式，以便可以频繁刷新缓存
@@ -51,33 +54,33 @@ class RemoteConfig {
         }
     }
     private fun fetchAndActivate(action: () -> Unit) {
-//        remoteConfig.fetchAndActivate()
-//            .addOnCompleteListener {
-//                if (it.isSuccessful) {
-//                    ServerManager.readServerConfig(remoteConfig.getString("itr_ser"))
-//                    ServerManager.readCityConfig(remoteConfig.getString("itr_fat"))
-//                    val itr_popshow=remoteConfig.getString("itr_popshow")
-//                    if (itr_popshow.isNotEmpty()){
-//                        itrPopShow=itr_popshow
-//                    }
-//                    val itr_v = remoteConfig.getString("itr_v")
-//                    if (itr_v.isNotEmpty()){
-//                        itrV=itr_v
-//                    }
-//
-//                    val itranslator_set = remoteConfig.getString("itranslator_set")
-//                    if (itranslator_set.isNotEmpty()){
-//                        iTranslatorSet=itranslator_set
-//                    }
-//
-//                    val ab_itranslator = remoteConfig.getString("ab_itranslator")
-//                    if (ab_itranslator.isNotEmpty()){
-//                        abItranslator=ab_itranslator
-//                    }
-//
-//                    action()
-//                }
-//            }
+        remoteConfig.fetchAndActivate()
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    ServerManager.readServerConfig(remoteConfig.getString("itr_ser"))
+                    ServerManager.readCityConfig(remoteConfig.getString("itr_fat"))
+                    val itr_popshow=remoteConfig.getString("itr_popshow")
+                    if (itr_popshow.isNotEmpty()){
+                        itrPopShow=itr_popshow
+                    }
+                    val itr_v = remoteConfig.getString("itr_v")
+                    if (itr_v.isNotEmpty()){
+                        itrV=itr_v
+                    }
+
+                    val itranslator_set = remoteConfig.getString("itranslator_set")
+                    if (itranslator_set.isNotEmpty()){
+                        iTranslatorSet=itranslator_set
+                    }
+
+                    val ab_itranslator = remoteConfig.getString("ab_itranslator")
+                    if (ab_itranslator.isNotEmpty()){
+                        abItranslator=ab_itranslator
+                    }
+
+                    action()
+                }
+            }
     }
 
     fun randomPlanType(){
@@ -88,12 +91,13 @@ class RemoteConfig {
     }
 
     private fun checkIsLimitUser(){
-        OkGo.get<String>("https://api.myip.com/")
+
+        OkGo.get<String>("https://ipapi.co/json")
+            .headers("User-Agent", WebView(App.ins).settings.userAgentString)
             .execute(object : StringCallback(){
                 override fun onSuccess(response: Response<String>?) {
-//                        ipJson="""{"ip":"89.187.185.11","country":"United States","cc":"IR"}"""
                     try {
-                        isLimitUser = JSONObject(response?.body()?.toString()).optString("cc").limitArea()
+                        isLimitUser = JSONObject(response?.body()?.toString()).optString("country_code").limitArea()
                     }catch (e:Exception){
 
                     }
@@ -105,140 +109,112 @@ class RemoteConfig {
 
 
     fun getAdsConfig(): String {
-        /*var config: String? = remoteConfig.getString("")
+        var config: String? = remoteConfig.getString("iTranslator_configuration")
         if (config.isNullOrEmpty()) {
             return adLocal
-        }*/
-        return adLocal
+        }
+        return config
+    }
+
+    fun Context.copy(string: String){
+        val cm = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        cm.setText(string)
     }
 
 
     val localServerList= arrayListOf(
         ServerBean(
-            ip = "100.223.52.0",
-            mima = "123456",
-            guo = "Japan",
-            cheng = "Tokyo",
-            kou = 100,
-            zhang = "chacha20-ietf-poly1305"
-        ),
-        ServerBean(
-            ip = "100.223.52.78",
-            mima = "123456",
-            guo = "UnitedStates",
-            cheng = "newyork",
-            kou = 100,
+            ip = "38.86.135.92",
+            mima = "5doHkcC2oYYPVCYy",
+            guo = "United States",
+            cheng = "Ashburn",
+            kou = 3852,
             zhang = "chacha20-ietf-poly1305"
         )
     )
 
-
-    private val adLocal = "{\n" +
-            "    \"iTran_zks\":50,\n" +
-            "    \"iTran_ydj\":15,\n" +
-            "    \"iTran_sykp\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
-            "            \"odkg\":\"o\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/3419835294\",\n" +
-            "            \"odkg\":\"o\",\n" +
-            "            \"nbm\":2\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_syys\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_home\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_hm\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_result\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/2247696110\",\n" +
-            "            \"odkg\":\"n\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_link\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"itr_return\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_tr\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":1\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_2back\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":1\n" +
-            "        }\n" +
-            "    ],\n" +
-            "    \"iTran_4back\":[\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":3\n" +
-            "        },\n" +
-            "        {\n" +
-            "            \"dls\":\"admob\",\n" +
-            "            \"ltof\":\"ca-app-pub-3940256099942544/1033173712\",\n" +
-            "            \"odkg\":\"i\",\n" +
-            "            \"nbm\":1\n" +
-            "        }\n" +
-            "    ]\n" +
-            "}"
+    private val adLocal = """{
+  "iTran_zks": 30,
+  "iTran_ydj": 5,
+  "iTran_sykp": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/7216279844",
+      "xmco": "o",
+      "xmcn": 3
+    }
+  ],
+  "iTran_syys": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2883155306",
+      "xmco": "n",
+      "xmcn": 3
+    }
+  ],
+  "iTran_tr": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/9548636001",
+      "xmco": "i",
+      "xmcn": 3
+    }
+  ],
+  "iTran_home": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/5609390990",
+      "xmco": "n",
+      "xmcn": 3
+    }
+  ],
+  "itr_hm": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/9357064313",
+      "xmco": "n",
+      "xmcn": 3
+    }
+  ],
+  "itr_result": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/6730900971",
+      "xmco": "n",
+      "xmcn": 3
+    }
+  ],
+  "itr_link": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/7943910290",
+      "xmco": "i",
+      "xmcn": 3
+    }
+  ],
+  "itr_return": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2791655961",
+      "xmco": "i",
+      "xmcn": 3
+    }
+  ],
+  "iTran_2back": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/2465187059",
+      "xmco": "i",
+      "xmcn": 3
+    }
+  ],
+  "iTran_4back": [
+    {
+      "xmca": "admob",
+      "xmcd": "ca-app-pub-2201554157805547/1996576908",
+      "xmco": "i",
+      "xmcn": 3
+    }
+  ]
+}"""
 }

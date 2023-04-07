@@ -7,7 +7,7 @@ import com.lzy.okgo.model.Response
 import org.json.JSONObject
 
 object OkGoManager {
-    private const val URL="https://test-crises.itranslator.org/groin/trivial"
+    private const val URL="https://crises.itranslator.org/andrew/digram"
 
     fun requestGet(url:String,result:(json:String)-> Unit){
         OkGo.get<String>(url).execute(object : StringCallback(){

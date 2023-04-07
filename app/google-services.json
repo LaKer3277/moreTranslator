@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "544941196870",
+    "project_id": "new-itranslator",
+    "storage_bucket": "new-itranslator.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544941196870:android:8d159a48fe90a664d9ec47",
+        "android_client_info": {
+          "package_name": "com.itranslator.easy.tool.pro"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544941196870-1n5d6cld32rgtb6btjba4kgu1oj1vfll.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcvngyGAlZNn_YyRx_gJRQifUmwNfnZCk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544941196870-1n5d6cld32rgtb6btjba4kgu1oj1vfll.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

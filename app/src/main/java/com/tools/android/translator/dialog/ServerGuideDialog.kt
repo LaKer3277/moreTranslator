@@ -44,6 +44,8 @@ class ServerGuideDialog: DialogFragment() {
             dismiss()
         }
         view.findViewById<AppCompatImageView>(R.id.iv_cancel).setOnClickListener {
+            RemoteConfig.ins.isShowingGuideDialog=false
+
             setPoint.point("itr_noti_close_click")
             dismiss()
         }

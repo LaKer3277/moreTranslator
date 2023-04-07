@@ -18,7 +18,7 @@ class WebActivity: BaseBindingActivity<ActivityWebBinding>() {
     companion object {
         fun openPrivacy(ctx: Activity) {
             val intent = Intent(ctx, WebActivity::class.java)
-            intent.putExtra("url", "https://sites.google.com/view/itranslator-app/home")
+            intent.putExtra("url", "https://sites.google.com/view/itranslatorapp/home")
             ctx.startActivity(intent)
         }
     }

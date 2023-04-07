@@ -195,10 +195,10 @@ class HomeActivity:BaseBindingActivity<ActivityHomeBinding>() {
     }
 
     private fun showServerGuideDialog(){
-        if(RemoteConfig.ins.isShowingGuideDialog||RemoteConfig.ins.planType!="A"){
+        if(RemoteConfig.ins.isShowingGuideDialog||RemoteConfig.ins.planType=="B"){
             return
         }
-        setPoint.point("itr_noti_show")
+        RemoteConfig.ins.isShowingGuideDialog=true
         ServerGuideDialog().show(supportFragmentManager,"ServerGuideDialog")
     }
 
