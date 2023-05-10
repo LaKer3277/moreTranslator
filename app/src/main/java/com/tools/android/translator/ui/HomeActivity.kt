@@ -26,6 +26,7 @@ import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityHomeBinding
 import com.tools.android.translator.dialog.LimitDialog
 import com.tools.android.translator.dialog.ServerGuideDialog
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.support.ReferrerManager
 import com.tools.android.translator.support.RemoteConfig
@@ -64,6 +65,8 @@ class HomeActivity:BaseBindingActivity<ActivityHomeBinding>() {
             startActivity(Intent(this,ConnectServerActivity::class.java))
         }
         binding.ivSet.setOnClickListener { startActivity(Intent(this,SettingsActivity::class.java)) }
+
+        binding.ivSub.setOnClickListener { GoogleBillingManager.jumpToSubAc(this) }
     }
 
     override fun onRequestPermissionsResult(
@@ -195,9 +198,10 @@ class HomeActivity:BaseBindingActivity<ActivityHomeBinding>() {
     }
 
     private fun showServerGuideDialog(){
-        if(RemoteConfig.ins.isShowingGuideDialog||RemoteConfig.ins.planType!="A"){
+        if(RemoteConfig.ins.isShowingGuideDialog||RemoteConfig.ins.planType=="B"){
             return
         }
+        RemoteConfig.ins.isShowingGuideDialog=true
         setPoint.point("itr_noti_show")
         ServerGuideDialog().show(supportFragmentManager,"ServerGuideDialog")
     }

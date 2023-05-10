@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_top"
+        android:layout_width="match_parent"
+        android:layout_height="290dp"
+        android:src="@mipmap/bg_sub"
+        android:scaleType="fitXY" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tv_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FF7C4D"
+        android:layout_marginTop="12dp"
+        android:text="Upgrade to an ad-free version" />
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_month"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/bg_sub_btn1">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 MONTH"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$11.99/month"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_year"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/bg_sub_btn1">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 YEAR"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$35.99/year"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/llc_try"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:gravity="center"
+        android:text="TRY NOW"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:background="@drawable/bg_sub_btn2"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#9EA1A6"
+        android:layout_marginTop="2dp"
+        android:text="3-day free trial.Then $11.99/month"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+    <androidx.appcompat.widget.AppCompatTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="#9EA1A6"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginBottom="20dp"
+        android:text="your subscription will automatically renew unless you canceled.Cancel anytime on Google Play Store"/>
+</androidx.appcompat.widget.LinearLayoutCompat>

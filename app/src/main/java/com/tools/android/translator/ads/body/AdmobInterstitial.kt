@@ -8,6 +8,7 @@ import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.tools.android.translator.ads.AdCenter
 import com.tools.android.translator.ads.AdPos
 import com.tools.android.translator.ads.ConfigId
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.support.ReferrerManager
 
 /**
@@ -37,6 +38,9 @@ class AdmobInterstitial(adPos: AdPos, configId: ConfigId): InterstitialAds(adPos
 
     override fun show(activity: Activity): Boolean {
         if (mInterstitial == null) return false
+        if(GoogleBillingManager.hasOpenSub){
+            actDismiss?.invoke()
+        }
         if (adPos!=AdPos.OPEN &&!ReferrerManager.canShowInterstitialAd()){
             actDismiss?.invoke()
             return false

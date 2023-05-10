@@ -29,6 +29,7 @@ import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.ads.body.NativeAds
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityConnectServerBinding
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.interfaces.IServerConnectCallback
 import com.tools.android.translator.interfaces.ITimerCallback
 import com.tools.android.translator.server.ConnectServerManager
@@ -104,6 +105,12 @@ class ConnectServerActivity: BaseBindingActivity<ActivityConnectServerBinding>()
             }
         }
         binding.llcServerInfo.setOnClickListener { binding.ivChooseServer.performClick() }
+
+        binding.ivSub.setOnClickListener {
+            if (!connecting){
+                GoogleBillingManager.jumpToSubAc(this)
+            }
+        }
     }
 
     private fun doLogic(){

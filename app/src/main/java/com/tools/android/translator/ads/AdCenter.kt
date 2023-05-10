@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import com.tools.android.translator.App
 import com.tools.android.translator.ads.body.Ad
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.support.ReferrerManager
 import com.tools.android.translator.support.RemoteConfig
 import kotlinx.coroutines.CoroutineScope
@@ -74,6 +75,10 @@ object AdCenter: AdmobCenter(), CoroutineScope by MainScope() {
 
     fun loadAd(ctx: Context, adPos: AdPos, adsListener: AdsListener, justCache: Boolean = false, forceLoad: Boolean = true) {
         Log.i(tag, "load: ${adPos.pos}")
+        if(GoogleBillingManager.hasOpenSub){
+            adsListener.onAdError("hasOpenSub")
+            return
+        }
         val cache = getCache(adPos)
         if (cache != null) {
             cache.defineListener(adsListener)

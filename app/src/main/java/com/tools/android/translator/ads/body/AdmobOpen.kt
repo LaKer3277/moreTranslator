@@ -6,6 +6,7 @@ import com.google.android.gms.ads.FullScreenContentCallback
 import com.google.android.gms.ads.appopen.AppOpenAd
 import com.tools.android.translator.ads.AdPos
 import com.tools.android.translator.ads.ConfigId
+import com.tools.android.translator.gp.GoogleBillingManager
 
 /**
  * Created on 2022/4/27
@@ -35,6 +36,9 @@ class AdmobOpen(adPos: AdPos, configId: ConfigId): InterstitialAds(adPos, config
 
     override fun show(activity: Activity): Boolean {
         if (appOpenAd == null) return false
+        if(GoogleBillingManager.hasOpenSub){
+            actDismiss?.invoke()
+        }
         appOpenAd?.fullScreenContentCallback = showListener
         appOpenAd?.show(activity)
         return true

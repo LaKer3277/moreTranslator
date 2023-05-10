@@ -6,6 +6,14 @@
     android:layout_height="match_parent"
     android:background="#293038">
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_sub"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@mipmap/icon_sub"
+        android:layout_marginRight="12dp"
+        app:layout_constraintTop_toTopOf="@id/iv_choose_server"
+        app:layout_constraintRight_toLeftOf="@id/iv_choose_server"/>
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/iv_choose_server"
         android:layout_width="40dp"
         android:layout_height="40dp"

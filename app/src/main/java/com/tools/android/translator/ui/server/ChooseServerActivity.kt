@@ -11,6 +11,7 @@ import com.tools.android.translator.ads.body.Ad
 import com.tools.android.translator.ads.body.InterstitialAds
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivityChooseServerBinding
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.server.ConnectServerManager
 import com.tools.android.translator.server.ServerBean
 import com.tools.android.translator.ui.adapt.ServerListAdapter
@@ -31,6 +32,7 @@ class ChooseServerActivity: BaseBindingActivity<ActivityChooseServerBinding>() {
             layoutManager=LinearLayoutManager(this@ChooseServerActivity)
             adapter=listAdapter
         }
+        binding.ivSub.setOnClickListener { GoogleBillingManager.jumpToSubAc(this) }
     }
 
     private fun clickItem(serverBean: ServerBean){

@@ -14,6 +14,7 @@ import com.google.android.gms.ads.MobileAds
 import com.tencent.mmkv.MMKV
 import com.tools.android.translator.ads.AdConfig
 import com.tools.android.translator.ads.RefreshAd
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.support.Devices
 import com.tools.android.translator.support.RemoteConfig
 import com.tools.android.translator.tba.TbaJson
@@ -57,6 +58,7 @@ class App: Application() {
         Uploader.ins.doStart()
         AdConfig.ins.checkFirst()
         TbaJson.uploadTba(this)
+        GoogleBillingManager.createClient(this)
     }
 
     private fun processName(applicationContext: Application): String {

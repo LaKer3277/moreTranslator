@@ -10,6 +10,7 @@ import com.tencent.mmkv.MMKV
 import com.tools.android.translator.R
 import com.tools.android.translator.base.BaseBindingActivity
 import com.tools.android.translator.databinding.ActivitySettingsBinding
+import com.tools.android.translator.gp.GoogleBillingManager
 import com.tools.android.translator.support.GpConsole
 import com.tools.android.translator.support.setPoint
 import com.tools.android.translator.ui.server.ConnectServerActivity
@@ -49,6 +50,7 @@ class SettingsActivity: BaseBindingActivity<ActivitySettingsBinding>(), View.OnC
                     toastLong("Contact us by email: fgseiutu.2@gmail.com")
                 }
             }
+            R.id.llc_sub->GoogleBillingManager.jumpToSubAc(this)
         }
     }
 }

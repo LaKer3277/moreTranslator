@@ -23,12 +23,35 @@
         app:layout_constraintTop_toTopOf="@id/iv_back"
         app:layout_constraintBottom_toBottomOf="@id/iv_back"/>
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llc_sub"
+        android:layout_width="match_parent"
+        android:layout_height="57dp"
+        android:paddingLeft="12dp"
+        android:paddingRight="12dp"
+        android:layout_margin="20dp"
+        android:gravity="center_vertical"
+        android:background="@drawable/bg_363c44_8dp"
+        app:layout_constraintTop_toBottomOf="@id/iv_back">
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/icon_sub"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="My Premium"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/white"/>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
     <TextView
         android:id="@+id/tv_rate"
         android:layout_width="match_parent"
         android:layout_height="58dp"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="20dp"
         android:drawableStart="@drawable/ic_rate"
         android:drawableEnd="@drawable/arrow_right"
         android:drawablePadding="12dp"
@@ -37,7 +60,7 @@
         android:text="Rate us"
         android:textColor="@color/white"
         android:textSize="14sp"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llc_sub"
         tools:ignore="HardcodedText" />
 
     <TextView
