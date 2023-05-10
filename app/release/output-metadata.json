@@ -4,15 +4,15 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.iTranslator.instanttool",
+  "applicationId": "com.itranslator.easy.tool.pro",
   "variantName": "release",
   "elements": [
     {
       "type": "SINGLE",
       "filters": [],
       "attributes": [],
-      "versionCode": 111,
-      "versionName": "1.1.1",
+      "versionCode": 1,
+      "versionName": "1.0.0",
       "outputFile": "app-release.apk"
     }
   ],
